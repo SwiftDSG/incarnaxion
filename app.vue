@@ -4,11 +4,29 @@
     <main ref="rdBody" class="rd-body">
       <nuxt-page class="rd-main" />
     </main>
+    <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
+      <div class="rd-loading-outer">
+        <div
+          class="rd-loading-inner"
+          :style="`width: ${(assetsLoaded / assetsCount) * 100}%`"
+        ></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { Ref } from "vue";
+  import { gsap } from "gsap";
+
   const { viewMode, assets, loaded } = useMain();
+
+  const assetsCount: Ref<number> = ref<number>(0);
+  const assetsLoaded: Ref<number> = ref<number>(0);
+
+  const loading: Ref<boolean> = ref<boolean>(true);
+
+  const rdLoadingContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
 
   function resizeHandler(e: MediaQueryList | MediaQueryListEvent): void {
     if (e.matches) viewMode.value = "mobile";
@@ -26,6 +44,7 @@
     ) {
       const image: HTMLImageElement = new Image();
       image.onload = () => {
+        assetsLoaded.value++;
         if (sub) assets.value[category][sub][index].file = image;
         else assets.value[category][index].file = image;
         loadAsset(index + 1, category, sub);
@@ -45,10 +64,49 @@
     }
   }
 
+  const animate = {
+    loaderInit(rdLoadingContainer: HTMLElement, cb: () => void): void {
+      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
+
+      tl.to(rdLoadingContainer.children[0], {
+        x: 0,
+        width: "10rem",
+        duration: 0.5,
+        ease: "power2.inOut",
+      });
+    },
+    loaderExit(rdLoadingContainer: HTMLElement, cb: () => void): void {
+      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
+
+      tl.to(rdLoadingContainer.children[0], {
+        x: "5rem",
+        width: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      }).to(rdLoadingContainer, {
+        opacity: 0,
+        duration: 0.25,
+      });
+    },
+  };
+
   watch(
     () => viewMode.value,
     (val, oldVal) => {
       if (val && oldVal) location.reload();
+    }
+  );
+
+  watch(
+    () => loaded.value,
+    (val) => {
+      if (val) {
+        setTimeout(() => {
+          animate.loaderExit(rdLoadingContainer.value, () => {
+            loading.value = false;
+          });
+        }, 500);
+      }
     }
   );
 
@@ -57,7 +115,24 @@
     mediaQuery.addEventListener("change", resizeHandler);
     resizeHandler(mediaQuery);
 
-    loadAsset(0, "male", "hairs");
+    assetsCount.value =
+      assets.value.male.accessories.length +
+      assets.value.male.bodies.length +
+      assets.value.male.clothes.length +
+      assets.value.male.eyebrows.length +
+      assets.value.male.eyes.length +
+      assets.value.male.hairs.length +
+      assets.value.female.accessories.length +
+      assets.value.female.bodies.length +
+      assets.value.female.clothes.length +
+      assets.value.female.eyebrows.length +
+      assets.value.female.eyes.length +
+      assets.value.female.hairs.length +
+      assets.value.backgrounds.length;
+
+    animate.loaderInit(rdLoadingContainer.value, () => {
+      loadAsset(0, "male", "hairs");
+    });
   });
 </script>
 
@@ -69,6 +144,34 @@
     background: var(--background-depth-two-color);
     display: flex;
     flex-direction: column;
+    .rd-loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--background-depth-two-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .rd-loading-outer {
+        position: relative;
+        width: 0;
+        height: 0.25rem;
+        border-radius: 0.125rem;
+        background: var(--border-color);
+        display: flex;
+        overflow: hidden;
+        transform: translateX(-5rem);
+        .rd-loading-inner {
+          position: relative;
+          height: 100%;
+          border-radius: 0.125rem;
+          background: var(--primary-color);
+          transition: 0.25s width ease-out;
+        }
+      }
+    }
   }
 </style>
 

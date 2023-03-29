@@ -10,17 +10,16 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'id'
       },
-      titleTemplate: '%s — overhous',
-      title: 'overhous',
+      title: 'IncarnaXion: ArtXplosion Avatar Make',
       meta: [
         { charset: 'utf-8' },
-        { name: 'keywords', content: 'kasir digital, pesan makanan, reservasi restoran' },
+        { name: 'keywords', content: 'IncarnaXion: ArtXplosion Avatar Make' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
         { name: 'format-detection', content: 'telephone=no' },
         { name: 'googlebot', content: 'notranslate' },
         { name: 'msapplication-TileColor', content: '#ffa84c' },
         { name: 'theme-color', content: '#ffffff' },
-        { hid: 'description', name: 'description', content: 'overhous' }
+        { hid: 'description', name: 'description', content: 'incarnaxion' }
       ],
       link: [
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }

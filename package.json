@@ -6,7 +6,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "start": "NUXT_APP_BASE_URL=/overhous PORT=3000 node .output/server/index.mjs"
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.11",

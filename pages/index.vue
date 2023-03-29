@@ -1,38 +1,12 @@
 <template>
   <div class="rd-container">
-    <div class="rd-canvas-container">
+    <div ref="rdContainer" class="rd-canvas-container">
       <canvas
         class="rd-canvas"
         ref="rdCanvas"
         width="1500"
         height="1500"
       ></canvas>
-      <!-- <div class="rd-images-container">
-        <img
-          :src="`/assets/backgrounds/${selection.background}.png`"
-          class="rd-image"
-        />
-        <img
-          :src="`/assets/${selection.gender}/bodies/${selection.body}.svg`"
-          class="rd-image"
-        />
-        <img
-          :src="`/assets/${selection.gender}/clothes/${selection.cloth}.svg`"
-          class="rd-image"
-        />
-        <img
-          :src="`/assets/${selection.gender}/hairs/${selection.hair}.svg`"
-          class="rd-image"
-        />
-        <img
-          :src="`/assets/${selection.gender}/eyes/${selection.eye}.svg`"
-          class="rd-image"
-        />
-        <img
-          :src="`/assets/${selection.gender}/eyebrows/${selection.eyebrow}.svg`"
-          class="rd-image"
-        />
-      </div> -->
       <div
         class="rd-areas-container"
         @mouseenter="mouseInHandler"
@@ -43,6 +17,7 @@
           :key="i"
           class="rd-area rd-area-background"
           @mouseenter="mouseIndexChange"
+          @touchstart="mouseIndexChange"
           :data-index="i"
           :style="`
             width: ${bound.width}%;
@@ -54,7 +29,36 @@
         ></div>
       </div>
     </div>
-    <div v-if="viewMode === 'mobile'" class="rd-panel-container"></div>
+    <div
+      v-if="viewMode === 'mobile' && panelOption"
+      ref="rdPanel"
+      class="rd-panel-container"
+      :class="panelOpened ? 'rd-panel-container-active' : ''"
+    >
+      <div class="rd-panel-header">
+        <span class="rd-panel-title rd-headline-4">{{ panelOption.name }}</span>
+        <rd-input-button-small icon="close" @clicked="closePanel" />
+      </div>
+      <div class="rd-panel-body">
+        <div
+          v-for="(option, i) in panelOption.option"
+          :key="i"
+          class="rd-panel-content"
+          :class="
+            i === selection[panelOption.identifier] - 1
+              ? 'rd-panel-content-active'
+              : ''
+          "
+          @click="changeAsset"
+          :data-index="i + 1"
+        >
+          <div
+            :style="`background-image: url('${option.src}')`"
+            class="rd-panel-content-image"
+          ></div>
+        </div>
+      </div>
+    </div>
     <div
       v-if="viewMode === 'desktop'"
       ref="rdPanel"
@@ -65,7 +69,7 @@
       <div v-if="panelOption" class="rd-panel-wrapper">
         <div class="rd-panel-header">
           <span class="rd-panel-title rd-headline-4">{{
-            bounds[panelIndex].name
+            panelOption.name
           }}</span>
           <rd-input-button-small icon="close" @clicked="closePanel" />
         </div>
@@ -82,7 +86,10 @@
             @click="changeAsset"
             :data-index="i + 1"
           >
-            <img :src="option.src" class="rd-panel-content-image" />
+            <div
+              :style="`background-image: url('${option.src}')`"
+              class="rd-panel-content-image"
+            ></div>
           </div>
         </div>
       </div>
@@ -129,6 +136,7 @@
 
   const { viewMode, assets, loaded } = useMain();
 
+  const rdContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
   const rdCursor: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdPanel: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
@@ -242,7 +250,7 @@
   function mouseOutHandler(): void {
     mouseIn.value = false;
   }
-  function mouseIndexChange(e: MouseEvent): void {
+  function mouseIndexChange(e: MouseEvent | TouchEvent): void {
     if (e.target instanceof HTMLElement) {
       const index: number = parseInt(e.target.dataset.index);
       mouseIndex.value = index;
@@ -260,16 +268,6 @@
   }
 
   function openPanel(e: MouseEvent): void {
-    const { clientX, clientY }: MouseEvent = e;
-    const x: number =
-      clientX + 15 * rem.value >= window.innerWidth
-        ? window.innerWidth - 15 * rem.value
-        : clientX;
-    const y: number =
-      clientY + 19 * rem.value >= window.innerHeight
-        ? window.innerHeight - 19 * rem.value
-        : clientY;
-
     panelOption.value = {
       index: mouseIndex.value,
       name: bounds[mouseIndex.value].name,
@@ -281,31 +279,62 @@
               bounds[mouseIndex.value].identifier
             ],
     };
+    if (viewMode.value === "desktop") {
+      const { clientX, clientY }: MouseEvent = e;
+      const x: number =
+        clientX + 15 * rem.value >= window.innerWidth
+          ? window.innerWidth - 15 * rem.value
+          : clientX;
+      const y: number =
+        clientY + 19 * rem.value >= window.innerHeight
+          ? window.innerHeight - 19 * rem.value
+          : clientY;
 
-    if (panelOpened.value) {
-      gsap.to(rdPanel.value, {
-        x,
-        y,
-        duration: 0.25,
-        ease: "power2.out",
-      });
-    } else {
-      setTimeout(() => {
+      if (panelOpened.value) {
         gsap.to(rdPanel.value, {
           x,
           y,
-          duration: 0,
+          duration: 0.25,
+          ease: "power2.out",
         });
-        panelAnim.value = animate.panelOpen(rdPanel.value, () => {
-          panelOpened.value = true;
-        });
+      } else {
+        setTimeout(() => {
+          gsap.to(rdPanel.value, {
+            x,
+            y,
+            duration: 0,
+          });
+          panelAnim.value = animate.panelOpen(rdPanel.value, () => {
+            panelOpened.value = true;
+          });
+        }, 100);
+      }
+    } else {
+      setTimeout(() => {
+        panelAnim.value = animate.panelShow(
+          rdPanel.value,
+          rdContainer.value,
+          () => {
+            panelOpened.value = true;
+          }
+        );
       }, 100);
     }
   }
   function closePanel(): void {
-    panelAnim.value = animate.panelClose(rdPanel.value, () => {
-      panelOpened.value = false;
-    });
+    if (viewMode.value === "desktop") {
+      panelAnim.value = animate.panelClose(rdPanel.value, () => {
+        panelOpened.value = false;
+      });
+    } else {
+      panelAnim.value = animate.panelHide(
+        rdPanel.value,
+        rdContainer.value,
+        () => {
+          panelOpened.value = false;
+        }
+      );
+    }
   }
   function changeAsset(e: MouseEvent): void {
     if (e.target instanceof HTMLElement) {
@@ -494,7 +523,6 @@
       const tl: GSAPTimeline = gsap.timeline({
         onComplete() {
           tl.to(rdPanel, {
-            scale: 1,
             opacity: 1,
             duration: 0,
           })
@@ -514,11 +542,74 @@
       rdPanel.style.transformOrigin = "top right";
 
       tl.to(rdPanel, {
-        scale: 0.875,
         opacity: 0,
         duration: 0.25,
-        ease: "power2.in",
+        ease: "power0.linear",
       });
+
+      return tl;
+    },
+    panelShow(
+      rdPanel: HTMLElement,
+      rdContainer: HTMLElement,
+      cb?: () => void
+    ): GSAPTimeline {
+      const tl: GSAPTimeline = gsap.timeline({
+        onComplete() {
+          if (cb) cb();
+        },
+      });
+
+      tl.to(rdPanel, {
+        y: 0,
+        duration: 0.25,
+        ease: "power2.out",
+      })
+        .to(
+          rdContainer,
+          {
+            y: `-${window.innerWidth / 2 + 2 * rem.value}`,
+            duration: 0.25,
+            ease: "power2.out",
+          },
+          "<0"
+        )
+        .to(rdPanel.children[1], {
+          opacity: 1,
+          duration: 0.25,
+        });
+
+      return tl;
+    },
+    panelHide(
+      rdPanel: HTMLElement,
+      rdContainer: HTMLElement,
+      cb?: () => void
+    ): GSAPTimeline {
+      const tl: GSAPTimeline = gsap.timeline({
+        onComplete() {
+          if (cb) cb();
+        },
+      });
+
+      tl.to(rdPanel.children[1], {
+        opacity: 0,
+        duration: 0.25,
+      })
+        .to(rdPanel, {
+          y: "105%",
+          duration: 0.25,
+          ease: "power2.inOut",
+        })
+        .to(
+          rdContainer,
+          {
+            y: 0,
+            duration: 0.25,
+            ease: "power2.inOut",
+          },
+          "<0"
+        );
 
       return tl;
     },
@@ -527,27 +618,29 @@
   watch(
     () => mouseIn.value,
     (val) => {
-      if (val) {
-        mouseActive.value = {
-          icon: bounds[mouseIndex.value].icon,
-          name: bounds[mouseIndex.value].name,
-        };
-        if (mouseAnim.value) mouseAnim.value.kill();
-        if (mouseTextAnim.value) mouseTextAnim.value.kill();
-        mouseAnim.value = animate.cursorShow(rdCursor.value);
-        mouseTextAnim.value = animate.cursorTextShow(rdCursor.value);
-      } else {
-        if (mouseAnim.value) mouseAnim.value.kill();
-        if (mouseTextAnim.value) mouseTextAnim.value.kill();
-        mouseAnim.value = animate.cursorHide(rdCursor.value);
-        mouseTextAnim.value = animate.cursorTextHide(rdCursor.value);
+      if (viewMode.value === "desktop") {
+        if (val) {
+          mouseActive.value = {
+            icon: bounds[mouseIndex.value].icon,
+            name: bounds[mouseIndex.value].name,
+          };
+          if (mouseAnim.value) mouseAnim.value.kill();
+          if (mouseTextAnim.value) mouseTextAnim.value.kill();
+          mouseAnim.value = animate.cursorShow(rdCursor.value);
+          mouseTextAnim.value = animate.cursorTextShow(rdCursor.value);
+        } else {
+          if (mouseAnim.value) mouseAnim.value.kill();
+          if (mouseTextAnim.value) mouseTextAnim.value.kill();
+          mouseAnim.value = animate.cursorHide(rdCursor.value);
+          mouseTextAnim.value = animate.cursorTextHide(rdCursor.value);
+        }
       }
     }
   );
   watch(
     () => mouseIndex.value,
     (val) => {
-      if (mouseIn.value) {
+      if (mouseIn.value && viewMode.value === "desktop") {
         if (mouseTextAnim.value) mouseTextAnim.value.kill();
         mouseTextAnim.value = animate.cursorTextHide(rdCursor.value, () => {
           mouseActive.value = {
@@ -559,6 +652,7 @@
       }
     }
   );
+
   watch(
     () => selection.value,
     (val) => {
@@ -609,7 +703,6 @@
     },
     { deep: true }
   );
-
   watch(
     () => loaded.value,
     (val) => {
@@ -624,13 +717,13 @@
           clothes: 1,
           accessories: 1,
         };
+        if (viewMode.value === "desktop")
+          window.addEventListener("mousemove", moveCursor);
       }
     }
   );
 
   onMounted(() => {
-    window.addEventListener("mousemove", moveCursor);
-
     canvasCtx.value = rdCanvas.value.getContext("2d");
     canvasCtx.value.globalAlpha = 1;
     canvasCtx.value.fillStyle = "#000";
@@ -641,7 +734,8 @@
   });
 
   onBeforeUnmount(() => {
-    window.removeEventListener("mousemove", moveCursor);
+    if (viewMode.value === "desktop")
+      window.removeEventListener("mousemove", moveCursor);
   });
 </script>
 
@@ -688,7 +782,7 @@
         }
       }
       .rd-areas-container {
-        // cursor: none;
+        cursor: none;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -833,14 +927,15 @@
             width: 6rem;
             height: 6rem;
             border-radius: 0.5rem;
-            img.rd-panel-content-image {
+            .rd-panel-content-image {
               pointer-events: none;
               z-index: 2;
               position: relative;
               width: 100%;
               height: 100%;
               border-radius: 0.5rem;
-              object-fit: cover;
+              background-size: contain;
+              object-fit: contain;
             }
             &::before {
               z-index: 0;
@@ -895,19 +990,112 @@
     }
     @media only screen and (max-width: 1023px) {
       .rd-canvas-container {
-        top: calc(50% - 37.5vw - 7.5rem);
-        left: calc(50% - 37.5vw);
-        width: 75vw;
-        height: 75vw;
+        top: calc(50% - 40vw);
+        left: calc(50% - 40vw);
+        width: 80vw;
+        height: 80vw;
         box-sizing: border-box;
       }
       .rd-panel-container {
         position: absolute;
-        bottom: 0;
+        top: auto;
+        bottom: 0 !important;
         width: 100vw;
-        height: 15rem;
-        display: flex;
+        height: calc(100vw + 4rem);
+        background: var(--background-depth-one-color);
         box-shadow: 0 -0.5rem 1rem rgba(199, 199, 199, 0.125);
+        display: flex;
+        flex-direction: column;
+        transform: translateY(105%);
+        .rd-panel-header {
+          position: relative;
+          width: 100%;
+          height: 4rem;
+          padding: 1rem;
+          box-sizing: border-box;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          &::after {
+            content: "";
+            top: 100%;
+            left: 0;
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+          }
+        }
+        .rd-panel-body {
+          position: relative;
+          width: 100%;
+          height: 100vw;
+          padding: 1rem;
+          box-sizing: border-box;
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+          overflow-y: auto;
+          opacity: 0;
+          .rd-panel-content {
+            cursor: pointer;
+            position: relative;
+            width: calc(50vw - 1.5rem);
+            height: calc(50vw - 1.5rem);
+            border-radius: 0.5rem;
+            .rd-panel-content-image {
+              pointer-events: none;
+              z-index: 2;
+              position: relative;
+              width: 100%;
+              height: 100%;
+              border-radius: 0.5rem;
+              background-size: contain;
+              object-fit: contain;
+            }
+            &::before {
+              z-index: 0;
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border-radius: calc(0.5rem + 4px);
+              background: var(--font-main-color);
+              opacity: 0.25;
+              transition: 0.125s ease-out transform, 0.125s ease-out width,
+                0.125s ease-out height, 0.125s ease-out background-color,
+                0.25s opacity;
+            }
+            &::after {
+              z-index: 1;
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border-radius: 0.5rem;
+              background: var(--background-depth-two-color);
+            }
+            &:hover::before {
+              width: calc(100% + 8px);
+              height: calc(100% + 8px);
+              transform: translate(-4px, -4px);
+            }
+            &:active::before {
+              opacity: 0.5;
+            }
+            &.rd-panel-content-active::before {
+              width: calc(100% + 8px);
+              height: calc(100% + 8px);
+              transform: translate(-4px, -4px);
+              background: var(--primary-color);
+              opacity: 1;
+            }
+          }
+        }
       }
     }
   }

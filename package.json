@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "incarnaxion",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "start": "NUXT_APP_BASE_URL=/overhous PORT=3005 node .output/server/index.mjs"
+    "start": "NUXT_APP_BASE_URL=/incarnaxion PORT=3005 node .output/server/index.mjs"
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.11",

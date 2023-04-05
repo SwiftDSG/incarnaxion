@@ -6,22 +6,22 @@
       style="position: absolute; top: 0; left: 0; pointer-events: none"
     >
       <img
-        src="/uc_logo.webp"
+        :src="`${config.public.base}/uc_logo.webp`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
-        src="/vcd_logo.webp"
+        :src="`${config.public.base}/vcd_logo.webp`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
-        src="/b4.png"
+        :src="`${config.public.base}/b4.png`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
-        src="/a8.png"
+        :src="`${config.public.base}/a8.png`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
@@ -177,6 +177,7 @@
   });
 
   const { viewMode } = useMain();
+  const config = useRuntimeConfig();
 
   const rdImagePreloadder: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdDescriptionTitle: Ref<HTMLHeadingElement> =

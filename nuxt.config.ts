@@ -22,17 +22,23 @@ export default defineNuxtConfig({
         { hid: 'description', name: 'description', content: 'incarnaxion' }
       ],
       link: [
-        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
-        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#050724' },
-        { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
-        { rel: 'icon', href: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
-        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'apple-touch-icon', href: `${process.env.BASE_URL}/apple-touch-icon.png`, sizes: '180x180' },
+        { rel: 'mask-icon', href: `${process.env.BASE_URL}/safari-pinned-tab.svg`, color: '#050724' },
+        { rel: 'icon', href: `${process.env.BASE_URL}/favicon-32x32.png`, type: 'image/png', sizes: '32x32' },
+        { rel: 'icon', href: `${process.env.BASE_URL}/favicon-16x16.png`, type: 'image/png', sizes: '16x16' },
+        { rel: 'manifest', href: `${process.env.BASE_URL}/site.webmanifest` },
       ]
     },
   },
-  css: [
-    '~/assets/fonts.scss',
-  ],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/fonts.scss" as *;'
+        }
+      }
+    },
+  },
   build: {
     loaders: {
       scss: {

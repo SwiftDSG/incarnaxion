@@ -169,13 +169,6 @@
   import { gsap } from "gsap";
   import { Ref } from "vue";
 
-  useHead({
-    link: [
-      { rel: "preload", href: "/uc_logo.webp", as: "image" },
-      { rel: "preload", href: "/vcd_logo.webp", as: "image" },
-    ],
-  });
-
   const { viewMode } = useMain();
   const config = useRuntimeConfig();
 

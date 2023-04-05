@@ -11,6 +11,11 @@
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
+        src="/vcd_logo.webp"
+        class="rd-image rd-target"
+        style="opacity: 0.01; width: 100px; object-fit: contain"
+      />
+      <img
         src="/b4.png"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
@@ -132,20 +137,14 @@
             <span
               class="rd-image-container rd-image-container-down rd-target-container"
             >
-              <div
-                style="background-image: url('/uc_logo.webp'); width: 3rem"
-                class="rd-image rd-target"
-              ></div>
+              <div class="rd-image rd-target"></div>
             </span>
           </span>
           <span class="rd-image-wrapper">
             <span
               class="rd-image-container rd-image-container-down rd-target-container"
             >
-              <div
-                style="background-image: url('/vcd_logo.webp'); width: 6.5rem"
-                class="rd-image rd-target"
-              ></div>
+              <div class="rd-image rd-target"></div>
             </span>
           </span>
         </div>
@@ -478,7 +477,23 @@
                 height: 100%;
                 background-size: contain;
                 background-position: center center;
-                background-repeat: none;
+                background-repeat: no-repeat;
+              }
+            }
+            &:first-child {
+              span.rd-image-container {
+                .rd-image {
+                  background-image: url("/uc_logo.webp");
+                  width: 3rem;
+                }
+              }
+            }
+            &:last-child {
+              span.rd-image-container {
+                .rd-image {
+                  background-image: url("/vcd_logo.webp");
+                  width: 6.5rem;
+                }
               }
             }
           }

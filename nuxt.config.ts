@@ -17,12 +17,16 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
         { name: 'format-detection', content: 'telephone=no' },
         { name: 'googlebot', content: 'notranslate' },
-        { name: 'msapplication-TileColor', content: '#ffa84c' },
+        { name: 'msapplication-TileColor', content: '#864fef' },
         { name: 'theme-color', content: '#ffffff' },
         { hid: 'description', name: 'description', content: 'incarnaxion' }
       ],
       link: [
-        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
+        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#050724' },
+        { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+        { rel: 'icon', href: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+        { rel: 'manifest', href: '/site.webmanifest' },
       ]
     },
   },

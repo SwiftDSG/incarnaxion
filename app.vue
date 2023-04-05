@@ -1,94 +1,23 @@
 <template>
-  <div class="rd-layout">
-    <header class="rd-header"></header>
+  <div class="rd-layout" ref="rdLayout">
+    <header v-if="viewMode === 'desktop'" class="rd-header">
+      <div class="rd-logo-container">
+        <img src="/incarnation_logo.png" class="rd-logo" />
+      </div>
+    </header>
     <main ref="rdBody" class="rd-body">
       <nuxt-page class="rd-main" />
     </main>
-    <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
-      <div class="rd-loading-outer">
-        <div
-          class="rd-loading-inner"
-          :style="`width: ${(assetsLoaded / assetsCount) * 100}%`"
-        ></div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { Ref } from "vue";
-  import { gsap } from "gsap";
-
-  const { viewMode, assets, loaded } = useMain();
-
-  const assetsCount: Ref<number> = ref<number>(0);
-  const assetsLoaded: Ref<number> = ref<number>(0);
-
-  const loading: Ref<boolean> = ref<boolean>(true);
-
-  const rdLoadingContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
+  const { viewMode } = useMain();
 
   function resizeHandler(e: MediaQueryList | MediaQueryListEvent): void {
     if (e.matches) viewMode.value = "mobile";
     else viewMode.value = "desktop";
   }
-
-  function loadAsset(
-    index: number,
-    category: "male" | "female" | "backgrounds",
-    sub?: string
-  ): void {
-    if (
-      (sub && assets.value[category]?.[sub]?.[index]) ||
-      assets.value[category]?.[index]
-    ) {
-      const image: HTMLImageElement = new Image();
-      image.onload = () => {
-        assetsLoaded.value++;
-        if (sub) assets.value[category][sub][index].file = image;
-        else assets.value[category][index].file = image;
-        loadAsset(index + 1, category, sub);
-      };
-      if (sub) image.src = assets.value[category][sub][index].src;
-      else image.src = assets.value[category][index].src;
-    } else if (assets.value[category]?.[sub]) {
-      const keys: string[] = Object.keys(assets.value[category]);
-      const i: number = keys.indexOf(sub);
-      loadAsset(0, category, keys[i + 1]);
-    } else if (assets.value[category]) {
-      if (category === "male") loadAsset(0, "female", "hairs");
-      else if (category === "female") loadAsset(0, "backgrounds");
-      else {
-        loaded.value = true;
-      }
-    }
-  }
-
-  const animate = {
-    loaderInit(rdLoadingContainer: HTMLElement, cb: () => void): void {
-      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
-
-      tl.to(rdLoadingContainer.children[0], {
-        x: 0,
-        width: "10rem",
-        duration: 0.5,
-        ease: "power2.inOut",
-      });
-    },
-    loaderExit(rdLoadingContainer: HTMLElement, cb: () => void): void {
-      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
-
-      tl.to(rdLoadingContainer.children[0], {
-        x: "5rem",
-        width: 0,
-        duration: 0.5,
-        ease: "power2.inOut",
-      }).to(rdLoadingContainer, {
-        opacity: 0,
-        duration: 0.25,
-      });
-    },
-  };
 
   watch(
     () => viewMode.value,
@@ -97,42 +26,10 @@
     }
   );
 
-  watch(
-    () => loaded.value,
-    (val) => {
-      if (val) {
-        setTimeout(() => {
-          animate.loaderExit(rdLoadingContainer.value, () => {
-            loading.value = false;
-          });
-        }, 500);
-      }
-    }
-  );
-
   onMounted(() => {
     const mediaQuery: MediaQueryList = window.matchMedia("(max-width: 1024px)");
     mediaQuery.addEventListener("change", resizeHandler);
     resizeHandler(mediaQuery);
-
-    assetsCount.value =
-      assets.value.male.accessories.length +
-      assets.value.male.bodies.length +
-      assets.value.male.clothes.length +
-      assets.value.male.eyebrows.length +
-      assets.value.male.eyes.length +
-      assets.value.male.hairs.length +
-      assets.value.female.accessories.length +
-      assets.value.female.bodies.length +
-      assets.value.female.clothes.length +
-      assets.value.female.eyebrows.length +
-      assets.value.female.eyes.length +
-      assets.value.female.hairs.length +
-      assets.value.backgrounds.length;
-
-    animate.loaderInit(rdLoadingContainer.value, () => {
-      loadAsset(0, "male", "hairs");
-    });
   });
 </script>
 
@@ -141,43 +38,36 @@
     position: relative;
     width: 100vw;
     min-height: 100vh;
-    background: var(--background-depth-two-color);
+    background: var(--background-depth-one-color);
     display: flex;
     flex-direction: column;
-    .rd-loading-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: var(--background-depth-two-color);
+    .rd-header {
+      z-index: 1;
+      position: relative;
+      width: 100%;
+      height: 5rem;
+      padding: 2rem 2rem 0 2rem;
+      box-sizing: border-box;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      .rd-loading-outer {
+      .rd-logo-container {
         position: relative;
-        width: 0;
-        height: 0.25rem;
-        border-radius: 0.125rem;
-        background: var(--border-color);
+        height: 100%;
         display: flex;
-        overflow: hidden;
-        transform: translateX(-5rem);
-        .rd-loading-inner {
-          position: relative;
-          height: 100%;
-          border-radius: 0.125rem;
-          background: var(--primary-color);
-          transition: 0.25s width ease-out;
-        }
       }
+    }
+    main.rd-body {
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
   }
 </style>
 
 <style lang="scss">
   :root {
-    --primary-color: #f0296d;
+    --primary-color: #864fef;
     --secondary-color: #fff;
     --error-color: #ff584c;
     --warning-color: #ffc904;
@@ -191,14 +81,14 @@
     --border: 1px solid var(--border-color);
     --box-shadow: 0 0.5rem 1rem rgba(199, 199, 199, 0.25);
 
-    // @media (prefers-color-scheme: dark) {
-    //   --background-depth-one-color: #290e17;
-    //   --background-depth-two-color: #36121f;
-    //   --background-depth-three-color: #3e1422;
-    //   --border-color: #4a2532;
-    //   --box-shadow: 0 0.5rem 1rem rgba(56, 56, 56, 0.125);
-    //   --font-main-color: #bba5ad;
-    // }
+    @media (prefers-color-scheme: dark) {
+      --background-depth-one-color: #050724;
+      --background-depth-two-color: #070b36;
+      --background-depth-three-color: #080c3d;
+      --border-color: #0b0675;
+      --box-shadow: 0 0.5rem 1rem rgba(33, 31, 90, 0.125);
+      --font-main-color: #b8bdf0;
+    }
   }
   html,
   body {
@@ -236,17 +126,15 @@
       height: auto;
       overflow-y: auto;
       .rd-title-1 {
-        font-size: 1.25rem;
-      }
-      .rd-title-2 {
-        font-size: 1.125rem;
+        font-size: 1rem;
       }
     }
   }
   .rd-title-1 {
-    font-size: 1.75rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    font-family: "Quicksand";
+    font-family: "Prompt";
+    line-height: 1;
   }
   .rd-title-2 {
     font-size: 1.375rem;
@@ -276,32 +164,32 @@
   .rd-headline-5 {
     font-size: 0.65rem;
     font-weight: 700;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
   }
   .rd-headline-6 {
     font-size: 0.55rem;
     font-weight: 700;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
   }
   .rd-subtitle-text {
     font-size: 0.75rem;
     font-weight: 500;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
   }
   .rd-body-text {
     font-size: 0.6rem;
     font-weight: 500;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
   }
   .rd-caption-text {
     font-size: 0.55rem;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
     font-weight: 500;
     color: var(--font-main-color);
     opacity: 0.5;
   }
   .rd-button-text {
-    font-family: "Quicksand";
+    font-family: "Montserrat";
     font-size: 0.55rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -311,7 +199,8 @@
   span.rd-text-wrapper,
   span.rd-word-wrapper,
   span.rd-letter-wrapper,
-  span.rd-image-wrapper {
+  span.rd-image-wrapper,
+  span.rd-svg-wrapper {
     position: relative;
     overflow: hidden;
     display: flex;
@@ -320,12 +209,79 @@
     span.rd-text-container,
     span.rd-word-container,
     span.rd-letter-container,
-    span.rd-image-container {
+    span.rd-image-container,
+    span.rd-svg-container {
       position: relative;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      span.rd-letter,
+      span.rd-text,
+      span.rd-word,
+      .rd-image,
+      svg.rd-svg {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+      &.rd-letter-container-up,
+      &.rd-text-container-up,
+      &.rd-word-container-up,
+      &.rd-image-container-up,
+      &.rd-svg-container-up {
+        transform: translateY(-100%);
+        span.rd-letter,
+        span.rd-text,
+        span.rd-word,
+        .rd-image,
+        svg.rd-svg {
+          transform: translateY(100%);
+        }
+      }
+      &.rd-letter-container-down,
+      &.rd-text-container-down,
+      &.rd-word-container-down,
+      &.rd-image-container-down,
+      &.rd-svg-container-down {
+        transform: translateY(100%);
+        span.rd-letter,
+        span.rd-text,
+        span.rd-word,
+        .rd-image,
+        svg.rd-svg {
+          transform: translateY(-100%);
+        }
+      }
+      &.rd-letter-container-left,
+      &.rd-text-container-left,
+      &.rd-word-container-left,
+      &.rd-image-container-left,
+      &.rd-svg-container-left {
+        transform: translateX(-100%);
+        span.rd-letter,
+        span.rd-text,
+        span.rd-word,
+        .rd-image,
+        svg.rd-svg {
+          transform: translateX(100%);
+        }
+      }
+      &.rd-letter-container-right,
+      &.rd-text-container-right,
+      &.rd-word-container-right,
+      &.rd-image-container-right,
+      &.rd-svg-container-right {
+        transform: translateX(100%);
+        span.rd-letter,
+        span.rd-text,
+        span.rd-word,
+        .rd-image,
+        svg.rd-svg {
+          transform: translateX(-100%);
+        }
+      }
     }
   }
   span.rd-image-wrapper {
@@ -334,12 +290,11 @@
     span.rd-image-container {
       width: 100%;
       height: 100%;
-      img.rd-image {
+      .rd-image {
         position: relative;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transform: scale(1.25);
       }
     }
   }
@@ -419,6 +374,38 @@
     }
     100% {
       transform: rotate(0);
+    }
+  }
+  @keyframes rd-move-x {
+    from,
+    to {
+      border-radius: 54% 79% 75% 58% / 70% 66% 71% 47%;
+    }
+    33% {
+      border-radius: 79% 43% 56% 67% / 58% 64% 61% 60%;
+      transform: translate(2.75em, 0) rotate(0) scale(0.75, 0.875);
+      background-color: #7de9ee;
+    }
+    67% {
+      border-radius: 55% 77% 56% 67% / 58% 64% 61% 60%;
+      transform: translate(1.25em, -0.5em) rotate(0) scale(1.125, 0.875);
+      background-color: #6bc785;
+    }
+  }
+  @keyframes rd-move-y {
+    from,
+    to {
+      border-radius: 60% 59% 51% 58% / 69% 64% 52% 55%;
+    }
+    33% {
+      border-radius: 51% 95% 72% 59% / 75% 98% 54% 75%;
+      transform: translate(0, 0.5em) rotate(0) scale(1, 1);
+      background-color: #e3ee7d;
+    }
+    67% {
+      border-radius: 74% 85% 63% 87% / 81% 100% 62% 82%;
+      transform: translate(1em, 2em) rotate(0) scale(0.75, 0.875);
+      background-color: #ee7d8a;
     }
   }
 </style>

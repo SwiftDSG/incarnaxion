@@ -1,6 +1,6 @@
 <template>
   <div class="rd-container">
-    <div ref="rdContainer" class="rd-canvas-container">
+    <div v-if="loaded" ref="rdContainer" class="rd-canvas-container">
       <canvas
         class="rd-canvas"
         ref="rdCanvas"
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div
-      v-if="viewMode === 'mobile' && panelOption"
+      v-if="viewMode === 'mobile' && panelOption && loaded"
       ref="rdPanel"
       class="rd-panel-container"
       :class="panelOpened ? 'rd-panel-container-active' : ''"
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div
-      v-if="viewMode === 'desktop'"
+      v-if="viewMode === 'desktop' && loaded"
       ref="rdPanel"
       class="rd-panel-container"
       :class="panelOpened ? 'rd-panel-container-active' : ''"
@@ -87,7 +87,16 @@
             :data-index="i + 1"
           >
             <div
-              :style="`background-image: url('${option.src}')`"
+              :style="
+                option.multi
+                  ? `background-image: url('${option.src[0]}')`
+                  : `background-image: url('${option.src}')`
+              "
+              class="rd-panel-content-image"
+            ></div>
+            <div
+              v-if="option.multi"
+              :style="`background-image: url('${option.src[1]}')`"
               class="rd-panel-content-image"
             ></div>
           </div>
@@ -95,7 +104,7 @@
       </div>
     </div>
     <div
-      v-if="viewMode === 'desktop'"
+      v-if="viewMode === 'desktop' && loaded"
       ref="rdCursor"
       class="rd-cursor-container"
     >
@@ -115,6 +124,123 @@
           <span class="rd-cursor-text">{{ mouseActive.name }}</span>
         </span>
       </span>
+    </div>
+    <div
+      v-if="selection && !loaded"
+      ref="rdQuestionContainer"
+      class="rd-question-wrapper"
+    >
+      <div
+        class="rd-question-container"
+        data-index="0"
+        :class="questionIndex === 0 ? 'rd-question-container-active' : ''"
+      >
+        <span class="rd-question rd-headline-4">Choose your gender</span>
+        <div class="rd-question-answers">
+          <div
+            class="rd-question-answer"
+            :class="
+              selection.gender === 'male' ? 'rd-question-answer-active' : ''
+            "
+            @click="selection.gender = 'male'"
+          >
+            <div class="rd-question-answer-icon-container">
+              <rd-svg
+                class="rd-question-answer-icon"
+                name="male"
+                color="secondary"
+              />
+            </div>
+          </div>
+          <div
+            class="rd-question-answer"
+            :class="
+              selection.gender === 'female' ? 'rd-question-answer-active' : ''
+            "
+            @click="selection.gender = 'female'"
+          >
+            <div class="rd-question-answer-icon-container">
+              <rd-svg
+                class="rd-question-answer-icon"
+                name="female"
+                color="secondary"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rd-question-container"
+        :class="questionIndex === 1 ? 'rd-question-container-active' : ''"
+        data-index="1"
+      >
+        <span class="rd-question rd-headline-4">Choose your skin tone</span>
+        <div class="rd-question-answers">
+          <div
+            class="rd-question-answer"
+            style="background-color: #d89c74"
+            :class="selection.bodies === 1 ? 'rd-question-answer-active' : ''"
+            @click="selection.bodies = 1"
+          ></div>
+          <div
+            class="rd-question-answer"
+            style="background-color: #aa6b57"
+            :class="selection.bodies === 2 ? 'rd-question-answer-active' : ''"
+            @click="selection.bodies = 2"
+          ></div>
+          <div
+            class="rd-question-answer"
+            style="background-color: #fdc78e"
+            :class="selection.bodies === 3 ? 'rd-question-answer-active' : ''"
+            @click="selection.bodies = 3"
+          ></div>
+          <div
+            class="rd-question-answer"
+            style="background-color: #b8785f"
+            :class="selection.bodies === 4 ? 'rd-question-answer-active' : ''"
+            @click="selection.bodies = 4"
+          ></div>
+          <div
+            class="rd-question-answer"
+            style="background-color: #53250c"
+            :class="selection.bodies === 5 ? 'rd-question-answer-active' : ''"
+            @click="selection.bodies = 5"
+          ></div>
+        </div>
+      </div>
+      <button
+        class="rd-question-button rd-question-button-prev"
+        style="opacity: 0; transform: scale(0.875)"
+        :class="questionIndex > 0 ? 'rd-question-button-active' : ''"
+        @click="prevQuestionIndex"
+      >
+        <div class="rd-question-button-icon-container">
+          <rd-svg
+            name="arrow-left"
+            class="rd-question-button-icon"
+            color="secondary"
+          />
+        </div>
+      </button>
+      <button
+        class="rd-question-button rd-question-button-next"
+        style="opacity: 0; transform: scale(0.875)"
+        :class="
+          (questionIndex === 0 && selection.gender) ||
+          (questionIndex === 1 && selection.bodies)
+            ? 'rd-question-button-active'
+            : ''
+        "
+        @click="nextQuestionIndex"
+      >
+        <div class="rd-question-button-icon-container">
+          <rd-svg
+            name="arrow-right"
+            class="rd-question-button-icon"
+            color="secondary"
+          />
+        </div>
+      </button>
     </div>
     <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
       <div class="rd-loading-outer">
@@ -140,10 +266,12 @@
     eyebrows: number;
     clothes: number;
     accessories: number;
+    mouths: number;
   }
 
   const { viewMode, assets, loaded } = useMain();
 
+  const rdQuestionContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdLoadingContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
@@ -153,7 +281,7 @@
   const assetsCount: Ref<number> = ref<number>(0);
   const assetsLoaded: Ref<number> = ref<number>(0);
 
-  const loading: Ref<boolean> = ref<boolean>(true);
+  const loading: Ref<boolean> = ref<boolean>(false);
 
   const canvasCtx: Ref<CanvasRenderingContext2D> =
     ref<CanvasRenderingContext2D>(null);
@@ -173,9 +301,10 @@
     icon: "palette",
   });
 
+  const questionIndex: Ref<number> = ref<number>(-1);
+
   const panelAnim: Ref<GSAPTimeline> = ref<GSAPTimeline>(null);
   const panelOpened: Ref<boolean> = ref<boolean>(false);
-  const panelIndex: Ref<number> = ref<number>(0);
   const panelOption: Ref<{
     index: number;
     name: string;
@@ -183,6 +312,7 @@
     option: {
       src: string;
       file: HTMLImageElement;
+      multi?: boolean;
     }[];
   }> = ref<{
     index: number;
@@ -191,10 +321,21 @@
     option: {
       src: string;
       file: HTMLImageElement;
+      multi?: boolean;
     }[];
   }>(null);
 
-  const selection: Ref<Selection> = ref<Selection>(null);
+  const selection: Ref<Selection> = ref<Selection>({
+    gender: null,
+    backgrounds: 1,
+    hairs: 1,
+    bodies: null,
+    eyes: 1,
+    eyebrows: 1,
+    clothes: 1,
+    accessories: 0,
+    mouths: 1,
+  });
 
   const bounds: {
     width: number;
@@ -269,22 +410,43 @@
     ) {
       const image: HTMLImageElement = new Image();
       image.onload = () => {
-        assetsLoaded.value++;
-        if (sub) assets.value[category][sub][index].file = image;
-        else assets.value[category][index].file = image;
-        loadAsset(index + 1, category, sub);
+        if (sub) {
+          if (assets.value[category][sub][index].multi) {
+            assets.value[category][sub][index].file = [];
+            assets.value[category][sub][index].file.push(image);
+            const newImage: HTMLImageElement = new Image();
+            newImage.onload = () => {
+              assetsLoaded.value++;
+              assets.value[category][sub][index].file.push(newImage);
+              loadAsset(index + 1, category, sub);
+            };
+            newImage.src = assets.value[category][sub][index].src[1];
+          } else {
+            assetsLoaded.value++;
+            assets.value[category][sub][index].file = image;
+            loadAsset(index + 1, category, sub);
+          }
+        } else {
+          assetsLoaded.value++;
+          assets.value[category][index].file = image;
+          loadAsset(index + 1, category, sub);
+        }
       };
-      if (sub) image.src = assets.value[category][sub][index].src;
-      else image.src = assets.value[category][index].src;
+      if (sub) {
+        if (assets.value[category][sub][index].multi) {
+          image.src = assets.value[category][sub][index].src[0];
+        } else {
+          image.src = assets.value[category][sub][index].src;
+        }
+      } else image.src = assets.value[category][index].src;
     } else if (assets.value[category]?.[sub]) {
       const keys: string[] = Object.keys(assets.value[category]);
       const i: number = keys.indexOf(sub);
       loadAsset(0, category, keys[i + 1]);
     } else if (assets.value[category]) {
-      if (category === "male") loadAsset(0, "female", "hairs");
-      else if (category === "female") loadAsset(0, "backgrounds");
+      if (category === "backgrounds") loaded.value = true;
       else {
-        loaded.value = true;
+        loadAsset(0, "backgrounds");
       }
     }
   }
@@ -385,6 +547,127 @@
       const index: number = parseInt(e.target.dataset.index);
       selection.value[panelOption.value.identifier] = index;
     }
+  }
+
+  function prevQuestionIndex(): void {
+    animate.questionExit(rdQuestionContainer.value, 1, false, () => {
+      animate.questionInit(rdQuestionContainer.value, 0, false, () => {
+        questionIndex.value = 0;
+      });
+    });
+  }
+  function nextQuestionIndex(): void {
+    if (questionIndex.value === 0) {
+      animate.questionExit(rdQuestionContainer.value, 0, false, () => {
+        animate.questionInit(rdQuestionContainer.value, 1, false, () => {
+          questionIndex.value = 1;
+        });
+      });
+    } else {
+      animate.questionExit(rdQuestionContainer.value, 1, true, () => {
+        loading.value = true;
+
+        assetsCount.value =
+          assets.value[selection.value.gender].accessories.length +
+          assets.value[selection.value.gender].bodies.length +
+          assets.value[selection.value.gender].clothes.length +
+          assets.value[selection.value.gender].eyebrows.length +
+          assets.value[selection.value.gender].eyes.length +
+          assets.value[selection.value.gender].hairs.length +
+          assets.value[selection.value.gender].mouths.length +
+          assets.value.backgrounds.length;
+
+        setTimeout(() => {
+          animate.loaderInit(rdLoadingContainer.value, () => {
+            loadAsset(0, selection.value.gender, "hairs");
+          });
+        }, 100);
+      });
+    }
+  }
+
+  function draw(): void {
+    canvasCtx.value.beginPath();
+    canvasCtx.value.drawImage(
+      assets.value.backgrounds[selection.value.backgrounds - 1].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    if (
+      selection.value.gender === "female" &&
+      assets.value["female"].hairs[selection.value.hairs - 1].multi
+    ) {
+      canvasCtx.value.drawImage(
+        assets.value["female"].hairs[selection.value.hairs - 1].file[0],
+        0,
+        0,
+        1500,
+        1500
+      );
+    }
+    canvasCtx.value.drawImage(
+      assets.value[selection.value.gender].bodies[selection.value.bodies - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    if (
+      selection.value.gender === "female" &&
+      assets.value["female"].hairs[selection.value.hairs - 1].multi
+    ) {
+      canvasCtx.value.drawImage(
+        assets.value["female"].hairs[selection.value.hairs - 1].file[1],
+        0,
+        0,
+        1500,
+        1500
+      );
+    } else {
+      canvasCtx.value.drawImage(
+        assets.value["male"].hairs[selection.value.hairs - 1].file,
+        0,
+        0,
+        1500,
+        1500
+      );
+    }
+    canvasCtx.value.drawImage(
+      assets.value[selection.value.gender].clothes[selection.value.clothes - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.value.drawImage(
+      assets.value[selection.value.gender].eyes[selection.value.eyes - 1].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.value.drawImage(
+      assets.value[selection.value.gender].mouths[selection.value.mouths - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.value.drawImage(
+      assets.value[selection.value.gender].eyebrows[
+        selection.value.eyebrows - 1
+      ].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.value.closePath();
   }
 
   const animate = {
@@ -680,6 +963,128 @@
 
       return tl;
     },
+    questionInit(
+      rdQuestionContainer: HTMLElement,
+      index: number,
+      init?: boolean,
+      cb?: () => void
+    ): void {
+      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
+
+      const rdQuestionText: HTMLElement = rdQuestionContainer.querySelector(
+        `.rd-question-container[data-index="${index}"] .rd-question`
+      );
+      const rdQuestionAnswer: HTMLElement[] = gsap.utils.toArray(
+        rdQuestionContainer.querySelectorAll(
+          `.rd-question-container[data-index="${index}"] .rd-question-answer`
+        )
+      );
+
+      tl.to(rdQuestionText, {
+        y: 0,
+        opacity: 1,
+        ease: "power2.out",
+        duration: 0.5,
+      }).to(
+        rdQuestionAnswer,
+        {
+          y: 0,
+          opacity: 1,
+          ease: "power2.out",
+          duration: 0.5,
+          stagger: 0.05,
+        },
+        "<0.25"
+      );
+
+      if (init) {
+        const rdQuestionButton: HTMLElement[] = gsap.utils.toArray(
+          rdQuestionContainer.querySelectorAll("button.rd-question-button")
+        );
+
+        tl.to(
+          rdQuestionButton,
+          {
+            opacity: 0.25,
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            onComplete() {
+              rdQuestionButton.forEach((a) => a.setAttribute("style", ""));
+            },
+          },
+          "<0"
+        );
+      }
+    },
+    questionExit(
+      rdQuestionContainer: HTMLElement,
+      index: number,
+      exit?: boolean,
+      cb?: () => void
+    ): void {
+      const tl: GSAPTimeline = gsap.timeline({
+        onComplete() {
+          gsap.to(rdQuestionText, {
+            opacity: 0,
+            y: "-100%",
+            duration: 0,
+          });
+          gsap.to(rdQuestionAnswer, {
+            opacity: 0,
+            y: "-2rem",
+            duration: 0,
+          });
+          cb();
+        },
+      });
+
+      const rdQuestionText: HTMLElement = rdQuestionContainer.querySelector(
+        `.rd-question-container[data-index="${index}"] .rd-question`
+      );
+      const rdQuestionAnswer: HTMLElement[] = gsap.utils.toArray(
+        rdQuestionContainer.querySelectorAll(
+          `.rd-question-container[data-index="${index}"] .rd-question-answer`
+        )
+      );
+
+      tl.to(rdQuestionAnswer, {
+        y: "2rem",
+        opacity: 0,
+        ease: "power2.inOut",
+        duration: 0.5,
+        stagger: 0.05,
+      }).to(
+        rdQuestionText,
+        {
+          y: "100%",
+          opacity: 0,
+          ease: "power2.inOut",
+          duration: 0.5,
+        },
+        "<0.25"
+      );
+
+      if (exit) {
+        const rdQuestionButton: HTMLElement[] = gsap.utils.toArray(
+          rdQuestionContainer.querySelectorAll("button.rd-question-button")
+        );
+
+        tl.to(
+          rdQuestionButton,
+          {
+            opacity: 0,
+            scale: 1.125,
+            duration: 0.5,
+            ease: "power2.out",
+            onComplete() {
+              rdQuestionButton.forEach((a) => a.setAttribute("style", ""));
+            },
+          },
+          "<0"
+        );
+      }
+    },
   };
 
   watch(
@@ -723,50 +1128,7 @@
   watch(
     () => selection.value,
     (val) => {
-      canvasCtx.value.beginPath();
-      canvasCtx.value.drawImage(
-        assets.value.backgrounds[selection.value.backgrounds - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.drawImage(
-        assets.value[val.gender].bodies[selection.value.bodies - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.drawImage(
-        assets.value[val.gender].hairs[selection.value.hairs - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.drawImage(
-        assets.value[val.gender].clothes[selection.value.clothes - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.drawImage(
-        assets.value[val.gender].eyes[selection.value.eyes - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.drawImage(
-        assets.value[val.gender].eyebrows[selection.value.eyebrows - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-      canvasCtx.value.closePath();
+      if (loaded.value) draw();
     },
     { deep: true }
   );
@@ -775,20 +1137,22 @@
     (val) => {
       if (val) {
         setTimeout(() => {
-          animate.loaderExit(rdLoadingContainer.value, () => {
-            loading.value = false;
-          });
-        }, 500);
-        selection.value = {
-          gender: "male",
-          backgrounds: 1,
-          hairs: 1,
-          bodies: 1,
-          eyes: 1,
-          eyebrows: 1,
-          clothes: 1,
-          accessories: 1,
-        };
+          canvasCtx.value = rdCanvas.value.getContext("2d");
+          canvasCtx.value.globalAlpha = 1;
+          canvasCtx.value.fillStyle = "#000";
+          canvasCtx.value.strokeStyle = "#000";
+          canvasCtx.value.lineWidth = 0;
+          canvasCtx.value.setLineDash([0, 0]);
+          canvasCtx.value.save();
+
+          draw();
+
+          setTimeout(() => {
+            animate.loaderExit(rdLoadingContainer.value, () => {
+              loading.value = false;
+            });
+          }, 400);
+        }, 100);
         if (viewMode.value === "desktop")
           window.addEventListener("mousemove", moveCursor);
       }
@@ -796,32 +1160,11 @@
   );
 
   onMounted(() => {
-    canvasCtx.value = rdCanvas.value.getContext("2d");
-    canvasCtx.value.globalAlpha = 1;
-    canvasCtx.value.fillStyle = "#000";
-    canvasCtx.value.strokeStyle = "#000";
-    canvasCtx.value.lineWidth = 0;
-    canvasCtx.value.setLineDash([0, 0]);
-    canvasCtx.value.save();
-
-    assetsCount.value =
-      assets.value.male.accessories.length +
-      assets.value.male.bodies.length +
-      assets.value.male.clothes.length +
-      assets.value.male.eyebrows.length +
-      assets.value.male.eyes.length +
-      assets.value.male.hairs.length +
-      assets.value.female.accessories.length +
-      assets.value.female.bodies.length +
-      assets.value.female.clothes.length +
-      assets.value.female.eyebrows.length +
-      assets.value.female.eyes.length +
-      assets.value.female.hairs.length +
-      assets.value.backgrounds.length;
-
-    animate.loaderInit(rdLoadingContainer.value, () => {
-      loadAsset(0, "male", "hairs");
-    });
+    setTimeout(() => {
+      animate.questionInit(rdQuestionContainer.value, 0, true, () => {
+        questionIndex.value = 0;
+      });
+    }, 500);
   });
 
   onBeforeUnmount(() => {
@@ -1020,7 +1363,9 @@
             .rd-panel-content-image {
               pointer-events: none;
               z-index: 2;
-              position: relative;
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 100%;
               height: 100%;
               border-radius: 0.5rem;
@@ -1076,6 +1421,170 @@
       }
       ::-webkit-scrollbar {
         display: none;
+      }
+    }
+    .rd-question-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--background-depth-one-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .rd-question-container {
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .rd-question {
+          position: relative;
+          color: #fff;
+          margin-bottom: 2rem;
+          text-transform: uppercase;
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        .rd-question-answers {
+          position: relative;
+          width: 100%;
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          align-items: center;
+          .rd-question-answer {
+            cursor: pointer;
+            position: relative;
+            width: 5rem;
+            height: 5rem;
+            background: var(--background-depth-one-color);
+            border-radius: 1rem;
+            border: 0.25rem solid var(--background-depth-three-color);
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-2rem);
+            transition: 0.25s border-color;
+            .rd-question-answer-icon-container {
+              pointer-events: none;
+              position: relative;
+              width: 100%;
+              height: 100%;
+              padding: 1rem;
+              box-sizing: border-box;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            &::before {
+              content: "";
+              pointer-events: none;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              box-shadow: 0 0 2rem var(--primary-color);
+              opacity: 0;
+              transition: 0.25s opacity;
+            }
+          }
+        }
+        &.rd-question-container-active {
+          pointer-events: all;
+          .rd-question-answers {
+            .rd-question-answer.rd-question-answer-active {
+              border-color: var(--primary-color);
+              .rd-question-answer-icon-container {
+                opacity: 1;
+              }
+              &::before {
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+      button.rd-question-button {
+        pointer-events: none;
+        cursor: pointer;
+        position: absolute;
+        width: 3rem;
+        height: 3rem;
+        border: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 1.5rem;
+        background: var(--primary-color);
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        transition: 0.5s scale, 0.25s filter, 0.25s opacity;
+        opacity: 0.25;
+        filter: grayscale(1);
+        .rd-question-button-icon-container {
+          pointer-events: none;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          padding: 0.75rem;
+          box-sizing: border-box;
+          display: flex;
+          justify-content: center;
+          align-content: center;
+        }
+        &:active {
+          scale: 0.875 !important;
+          transition: 0.25s scale;
+          &::after {
+            opacity: 0.25;
+            transition: 0.25s opacity;
+          }
+        }
+        &:hover {
+          &::before {
+            opacity: 1;
+          }
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          pointer-events: none;
+          width: 100%;
+          height: 100%;
+          border-radius: 1.5rem;
+          background: #000;
+          opacity: 0;
+          transition: 0.5s opacity;
+        }
+        &::before {
+          content: "";
+          pointer-events: none;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          box-shadow: 0 0 2rem var(--primary-color);
+          border-radius: 50%;
+          opacity: 0;
+          transition: 0.25s opacity;
+        }
+        &.rd-question-button-prev {
+          left: 2rem;
+        }
+        &.rd-question-button-next {
+          right: 2rem;
+        }
+        &.rd-question-button-active {
+          pointer-events: all;
+          filter: grayscale(0);
+          opacity: 1;
+        }
       }
     }
     .rd-loading-container {
@@ -1213,6 +1722,24 @@
               opacity: 1;
             }
           }
+        }
+      }
+      .rd-question-wrapper {
+        .rd-question-container {
+          .rd-question-answers {
+            gap: 3vw;
+            .rd-question-answer {
+              width: 15vw;
+              height: 15vw;
+              border-radius: 3vw;
+              .rd-question-answer-icon-container {
+                padding: 3vw;
+              }
+            }
+          }
+        }
+        button.rd-question-button {
+          bottom: 2rem;
         }
       }
     }

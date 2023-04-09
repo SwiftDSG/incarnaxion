@@ -16,12 +16,12 @@
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
-        :src="`${config.public.base}/b4.png`"
+        :src="`${config.public.base}/asset_2.webp`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
       <img
-        :src="`${config.public.base}/a8.png`"
+        :src="`${config.public.base}/asset_1.webp`"
         class="rd-image rd-target"
         style="opacity: 0.01; width: 100px; object-fit: contain"
       />
@@ -69,7 +69,7 @@
             <span
               class="rd-image-container rd-image-container-down rd-target-container"
             >
-              <img src="/logo.png" class="rd-image rd-target" />
+              <img src="/logo.webp" class="rd-image rd-target" />
             </span>
           </span>
           <span
@@ -151,7 +151,7 @@
       </div>
       <div class="rd-description-button" ref="rdButton">
         <div class="rd-description-button-background"></div>
-        <button class="rd-description-button-input">
+        <button class="rd-description-button-input" @click="exit">
           <div class="rd-description-button-input-icon-container">
             <rd-svg name="play" color="secondary" />
           </div>
@@ -171,6 +171,7 @@
 
   const { viewMode } = useMain();
   const config = useRuntimeConfig();
+  const router = useRouter();
 
   const rdImagePreloadder: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdDescriptionTitle: Ref<HTMLHeadingElement> =
@@ -181,6 +182,9 @@
   const rdAttraction: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdButton: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
 
+  const initAnim: Ref<GSAPTimeline> = ref<GSAPTimeline>(null);
+  const backgroundInitAnim: Ref<GSAPTimeline> = ref<GSAPTimeline>(null);
+
   const animate = {
     init(
       rdDescriptionTitle: HTMLElement,
@@ -188,7 +192,7 @@
       rdDescriptionSponsor: HTMLElement,
       rdAttraction: HTMLElement,
       rdButton: HTMLElement
-    ): void {
+    ): GSAPTimeline {
       const tl: GSAPTimeline = gsap.timeline({});
 
       const rdDescriptionTitleWordContainer: HTMLElement[] = gsap.utils.toArray(
@@ -273,8 +277,8 @@
           {
             y: 0,
             rotate: 0,
-            duration: 0.5,
-            ease: "power1.out",
+            duration: 1,
+            ease: "power4.out",
           },
           "<0.25"
         )
@@ -286,14 +290,126 @@
             duration: 0.5,
             ease: "power2.out",
           },
-          "<0.375"
+          "<0.5"
         )
         .to(rdButton, {
           opacity: 1,
           duration: 0.25,
         });
+
+      return tl;
     },
-    backgroundInit(rdBackground: HTMLElement, cb: () => void): void {
+    exit(
+      rdDescriptionTitle: HTMLElement,
+      rdDescription: HTMLElement,
+      rdDescriptionSponsor: HTMLElement,
+      rdAttraction: HTMLElement,
+      rdButton: HTMLElement,
+      cb: () => void
+    ): void {
+      const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
+
+      const rdDescriptionTitleWordContainer: HTMLElement[] = gsap.utils.toArray(
+        rdDescriptionTitle.querySelectorAll(".rd-target-container")
+      );
+      const rdDescriptionTitleWord: HTMLElement[] = gsap.utils.toArray(
+        rdDescriptionTitle.querySelectorAll(".rd-target")
+      );
+      const rdDescriptionWordContainer: HTMLElement[] = gsap.utils.toArray(
+        rdDescription.querySelectorAll(".rd-word-container")
+      );
+      const rdDescriptionWord: HTMLElement[] = gsap.utils.toArray(
+        rdDescription.querySelectorAll(".rd-word")
+      );
+      const rdDescriptionSponsorWordContainer: HTMLElement[] =
+        gsap.utils.toArray(
+          rdDescriptionSponsor.querySelectorAll(".rd-target-container")
+        );
+      const rdDescriptionSponsorWord: HTMLElement[] = gsap.utils.toArray(
+        rdDescriptionSponsor.querySelectorAll(".rd-target")
+      );
+
+      tl.to(rdDescriptionTitleWordContainer, {
+        y: "100%",
+        duration: 0.5,
+        ease: "power2.inOut",
+      })
+        .to(
+          rdDescriptionTitleWord,
+          {
+            y: "-100%",
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdDescriptionWordContainer,
+          {
+            y: "100%",
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdDescriptionWord,
+          {
+            y: "-100%",
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdDescriptionSponsorWordContainer,
+          {
+            y: "100%",
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdDescriptionSponsorWord,
+          {
+            y: "-100%",
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdAttraction.children[0],
+          {
+            y: "100%",
+            rotate: 180,
+            duration: 0.5,
+            ease: "power1.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdAttraction.children[1],
+          {
+            scale: 1.125,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdButton,
+          {
+            opacity: 0,
+            duration: 0.25,
+          },
+          "<0"
+        );
+    },
+    backgroundInit(rdBackground: HTMLElement, cb: () => void): GSAPTimeline {
       const tl: GSAPTimeline = gsap.timeline();
 
       const rdBlobOne: HTMLElement = rdBackground.querySelector(
@@ -331,6 +447,53 @@
           },
           "<0"
         );
+
+      return tl;
+    },
+    backgroundExit(rdBackground: HTMLElement, cb: () => void): void {
+      const tl: GSAPTimeline = gsap.timeline({
+        onComplete: cb,
+      });
+
+      const rdBlobOne: HTMLElement = rdBackground.querySelector(
+        ".rd-background-gradient-one"
+      );
+      const rdBlobTwo: HTMLElement = rdBackground.querySelector(
+        ".rd-background-gradient-two"
+      );
+      const rdLines: HTMLElement = rdBackground.querySelector(
+        ".rd-background-decoration-path"
+      );
+
+      rdBlobOne.style.animationPlayState = "paused";
+      rdBlobTwo.style.animationPlayState = "paused";
+
+      tl.to(rdBlobOne, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      })
+        .to(
+          rdBlobTwo,
+          {
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.inOut",
+          },
+          "<0"
+        )
+        .to(
+          rdLines,
+          {
+            strokeDashoffset: 12647.2490234375,
+            duration: 1,
+            opacity: 0,
+            ease: "power2.inOut",
+          },
+          "<0"
+        );
     },
   };
 
@@ -339,16 +502,36 @@
     "blast off into the ArtXplosion space!",
   ];
 
+  function exit(): void {
+    if (backgroundInitAnim.value) backgroundInitAnim.value.kill();
+    if (initAnim.value) initAnim.value.kill();
+    animate.exit(
+      rdDescriptionTitle.value,
+      rdDescription.value,
+      rdDescriptionSponsor.value,
+      rdAttraction.value,
+      rdButton.value,
+      () => {
+        animate.backgroundExit(rdBackground.value, () => {
+          router.push("/creator");
+        });
+      }
+    );
+  }
+
   onMounted(() => {
-    animate.backgroundInit(rdBackground.value, () => {
-      animate.init(
-        rdDescriptionTitle.value,
-        rdDescription.value,
-        rdDescriptionSponsor.value,
-        rdAttraction.value,
-        rdButton.value
-      );
-    });
+    backgroundInitAnim.value = animate.backgroundInit(
+      rdBackground.value,
+      () => {
+        initAnim.value = animate.init(
+          rdDescriptionTitle.value,
+          rdDescription.value,
+          rdDescriptionSponsor.value,
+          rdAttraction.value,
+          rdButton.value
+        );
+      }
+    );
   });
 </script>
 
@@ -585,7 +768,7 @@
         bottom: -19vw;
         width: 35vw;
         height: 35vw;
-        background-image: url("/a8.png");
+        background-image: url("/asset_1.webp");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center center;
@@ -595,7 +778,7 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background-image: url("/b4.png");
+        background-image: url("/asset_2.webp");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center center;
@@ -652,6 +835,63 @@
           path.rd-background-decoration-path {
             stroke-dashoffset: 12647.2490234375px;
             stroke-dasharray: 12647.2490234375px;
+          }
+        }
+      }
+    }
+    @media only screen and (max-width: 1379px) and (min-width: 1025px) {
+      .rd-description-container {
+        h1.rd-description-title {
+          .rd-sentence-row {
+            .rd-image-wrapper {
+              left: 7.375rem;
+              bottom: -1.25rem;
+              height: 5.5rem;
+            }
+            &:first-child {
+              .rd-word-wrapper:last-child {
+                margin-left: 1.875rem !important;
+              }
+            }
+          }
+        }
+        .rd-description {
+          font-size: 0.75rem;
+        }
+        .rd-description-sponsor {
+          span.rd-text-wrapper {
+            font-size: 0.5rem;
+          }
+          .rd-description-sponsor-container {
+            height: 2rem;
+            span.rd-image-wrapper {
+              &:first-child {
+                span.rd-image-container {
+                  .rd-image {
+                    width: 2rem;
+                  }
+                }
+              }
+              &:last-child {
+                span.rd-image-container {
+                  .rd-image {
+                    width: calc(13rem / 3);
+                  }
+                }
+              }
+            }
+          }
+        }
+        .rd-description-button {
+          width: 5rem;
+          height: 5rem;
+          button.rd-description-button-input {
+            width: calc(15rem / 7);
+            height: calc(15rem / 7);
+            border-radius: 50%;
+            .rd-description-button-input-icon-container {
+              padding: 0.5rem;
+            }
           }
         }
       }

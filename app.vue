@@ -2,7 +2,7 @@
   <div class="rd-layout" ref="rdLayout">
     <header v-if="viewMode === 'desktop'" class="rd-header">
       <div class="rd-logo-container">
-        <img src="/incarnation_logo.png" class="rd-logo" />
+        <img src="/incarnation_logo.webp" class="rd-logo" />
       </div>
     </header>
     <main ref="rdBody" class="rd-body">
@@ -101,6 +101,7 @@
     color: var(--font-main-color);
     background: var(--background-depth-two-color);
     overflow-x: hidden;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     @media only screen and (max-width: 1900px) and (min-width: 1600px) {
       font-size: 22px;
     }
@@ -112,9 +113,15 @@
     }
     @media only screen and (max-width: 1379px) and (min-width: 1320px) {
       font-size: 19px;
+      .rd-title-1 {
+        font-size: 2rem;
+      }
     }
     @media only screen and (max-width: 1319px) and (min-width: 1024px) {
       font-size: 18px;
+      .rd-title-1 {
+        font-size: 2rem;
+      }
     }
     @media only screen and (max-width: 640px) {
       font-size: 24px;
@@ -159,7 +166,7 @@
   .rd-headline-4 {
     font-size: 0.75rem;
     font-weight: 700;
-    font-family: "Quicksand";
+    font-family: "Montserrat";
   }
   .rd-headline-5 {
     font-size: 0.65rem;

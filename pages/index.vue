@@ -383,7 +383,7 @@
         .to(
           rdAttraction.children[0],
           {
-            y: "100%",
+            y: "150%",
             rotate: 180,
             duration: 0.5,
             ease: "power1.inOut",
@@ -947,9 +947,9 @@
           transform: translateY(150%) rotate(-180deg);
         }
         .rd-image-avatar {
-          top: 5%;
-          width: 50vw;
-          height: 50vw;
+          bottom: calc(75vw - 1rem);
+          width: 75vw;
+          height: 75vw;
         }
       }
       .rd-background {
@@ -971,6 +971,22 @@
           svg.rd-background-decoration-container {
             opacity: 0.05;
           }
+        }
+      }
+    }
+    @media only screen and (max-width: 400px) {
+      .rd-description-container {
+        padding: 2rem 1.5rem 0 1.5rem;
+        .rd-description-button {
+          bottom: calc(1.5rem + 37.5vw - 3.5rem);
+        }
+      }
+      .rd-attraction-container {
+        .rd-image-planet {
+          bottom: 1.5rem;
+        }
+        .rd-image-avatar {
+          display: none;
         }
       }
     }

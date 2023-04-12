@@ -30,14 +30,119 @@
       </div>
     </div>
     <div
+      v-if="loaded && viewMode === 'desktop'"
+      class="rd-action-container rd-action-container-left"
+    >
+      <rd-input-button-small
+        icon="palette"
+        tooltip="Backdrop"
+        @clicked="mouseIndexChange(0)"
+        :type="panelIndex === 0 && panelOpened ? 'primary' : 'default'"
+      />
+      <rd-input-button-small
+        icon="glasses"
+        tooltip="Accessories"
+        @clicked="mouseIndexChange(3)"
+        :type="panelIndex === 3 && panelOpened ? 'primary' : 'default'"
+      />
+      <rd-input-button-small
+        :icon="selection.gender === 'male' ? 'clothing-man' : 'clothing-woman'"
+        tooltip="Clothing"
+        @clicked="mouseIndexChange(1)"
+        :type="panelIndex === 1 && panelOpened ? 'primary' : 'default'"
+      />
+    </div>
+    <div
+      v-if="loaded && viewMode === 'desktop'"
+      class="rd-action-container rd-action-container-right"
+    >
+      <rd-input-button-small
+        icon="eye"
+        tooltip="Eyes"
+        @clicked="mouseIndexChange(4)"
+        :type="panelIndex === 4 && panelOpened ? 'primary' : 'default'"
+      />
+      <rd-input-button-small
+        icon="feather"
+        tooltip="Eyebrows"
+        @clicked="mouseIndexChange(5)"
+        :type="panelIndex === 5 && panelOpened ? 'primary' : 'default'"
+      />
+      <rd-input-button-small
+        icon="emoticon"
+        tooltip="Mouth"
+        @clicked="mouseIndexChange(6)"
+        :type="panelIndex === 6 && panelOpened ? 'primary' : 'default'"
+      />
+      <rd-input-button-small
+        :icon="selection.gender === 'male' ? 'face-man' : 'face-woman'"
+        tooltip="Hair"
+        @clicked="mouseIndexChange(2)"
+        :type="panelIndex === 2 && panelOpened ? 'primary' : 'default'"
+      />
+    </div>
+    <div class="rd-export-button-container">
+      <button class="rd-export-button rd-button-text" @click="exportOpen">
+        EXPORT
+      </button>
+    </div>
+    <div
       v-if="viewMode === 'mobile' && panelOption && loaded"
       ref="rdPanel"
       class="rd-panel-container"
       :class="panelOpened ? 'rd-panel-container-active' : ''"
     >
       <div class="rd-panel-header">
-        <span class="rd-panel-title rd-headline-4">{{ panelOption.name }}</span>
+        <span class="rd-panel-title rd-headline-4">Configure avatar</span>
         <rd-input-button-small icon="close" @clicked="closePanel" />
+      </div>
+      <div class="rd-panel-actions-wrapper">
+        <div class="rd-panel-actions-container">
+          <rd-input-button-small
+            icon="palette"
+            tooltip="Backdrop"
+            @clicked="mouseIndexChange(0)"
+            :type="panelIndex === 0 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            icon="glasses"
+            tooltip="Accessories"
+            @clicked="mouseIndexChange(3)"
+            :type="panelIndex === 3 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            :icon="
+              selection.gender === 'male' ? 'clothing-man' : 'clothing-woman'
+            "
+            tooltip="Clothing"
+            @clicked="mouseIndexChange(1)"
+            :type="panelIndex === 1 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            icon="eye"
+            tooltip="Eyes"
+            @clicked="mouseIndexChange(4)"
+            :type="panelIndex === 4 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            icon="feather"
+            tooltip="Eyebrows"
+            @clicked="mouseIndexChange(5)"
+            :type="panelIndex === 5 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            icon="emoticon"
+            tooltip="Mouth"
+            @clicked="mouseIndexChange(6)"
+            :type="panelIndex === 6 && panelOpened ? 'primary' : 'default'"
+          />
+          <rd-input-button-small
+            :icon="selection.gender === 'male' ? 'face-man' : 'face-woman'"
+            tooltip="Hair"
+            @clicked="mouseIndexChange(2)"
+            :type="panelIndex === 2 && panelOpened ? 'primary' : 'default'"
+          />
+        </div>
       </div>
       <div class="rd-panel-body">
         <div
@@ -53,7 +158,16 @@
           :data-index="i + 1"
         >
           <div
-            :style="`background-image: url('${option.src}')`"
+            :style="
+              option.multi
+                ? `background-image: url('${option.src[0]}')`
+                : `background-image: url('${option.src}')`
+            "
+            class="rd-panel-content-image"
+          ></div>
+          <div
+            v-if="option.multi"
+            :style="`background-image: url('${option.src[1]}')`"
             class="rd-panel-content-image"
           ></div>
         </div>
@@ -208,6 +322,24 @@
           ></div>
         </div>
       </div>
+      <div
+        class="rd-question-container"
+        :class="questionIndex === 2 ? 'rd-question-container-active' : ''"
+        data-index="2"
+      >
+        <span class="rd-question rd-headline-4"
+          >Lastly, what is your name?</span
+        >
+        <div class="rd-question-answers">
+          <input
+            type="text"
+            class="rd-question-answer rd-headline-4"
+            @input="updateName"
+            ref="rdQuestionAnswerInput"
+          />
+          <div class="rd-question-answer-shadow"></div>
+        </div>
+      </div>
       <button
         class="rd-question-button rd-question-button-prev"
         style="opacity: 0; transform: scale(0.875)"
@@ -227,7 +359,8 @@
         style="opacity: 0; transform: scale(0.875)"
         :class="
           (questionIndex === 0 && selection.gender) ||
-          (questionIndex === 1 && selection.bodies)
+          (questionIndex === 1 && selection.bodies) ||
+          (questionIndex === 2 && name)
             ? 'rd-question-button-active'
             : ''
         "
@@ -240,6 +373,39 @@
             color="secondary"
           />
         </div>
+      </button>
+    </div>
+    <div
+      class="rd-export-container"
+      ref="rdExportContainer"
+      :class="exportOpened ? 'rd-export-container-active' : ''"
+    >
+      <span class="rd-export-title rd-headline-4">Share your avatar!</span>
+      <div class="rd-export-image-container">
+        <canvas
+          class="rd-export-canvas"
+          width="1500"
+          height="1500"
+          ref="rdExportCanvas"
+        ></canvas>
+      </div>
+      <div class="rd-export-caption-container">
+        <p class="rd-export-caption rd-body-text" ref="rdExportCaption">
+          {{
+            `Hi, ${name} here! Imbued with all the cosmic powers that burst from ‘the big bang phenomenon,’ I finally find my IncarnaXion, and now I’m ready to BLAST OFF to ArtXplosion!!!`
+          }}
+          <br />
+          <br />
+          Let’s take a journey together into this creative galaxy! Visit
+          @vcd.outliningdesign to incarnate yourself and get ready to BLAST
+          OFF!!
+          <br />
+          <br />
+          #ArtXplosion #VCDears #OutliningDesign2023 #IncarnaXion
+        </p>
+      </div>
+      <button @click="download" class="rd-export-button rd-button-text">
+        DOWNLOAD
       </button>
     </div>
     <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
@@ -275,8 +441,13 @@
   const rdLoadingContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
+  const rdExportCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
+  const rdExportCaption: Ref<HTMLParagraphElement> =
+    ref<HTMLParagraphElement>(null);
   const rdCursor: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdPanel: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
+  const rdQuestionAnswerInput: Ref<HTMLInputElement> =
+    ref<HTMLInputElement>(null);
 
   const assetsCount: Ref<number> = ref<number>(0);
   const assetsLoaded: Ref<number> = ref<number>(0);
@@ -304,6 +475,7 @@
   const questionIndex: Ref<number> = ref<number>(-1);
 
   const panelAnim: Ref<GSAPTimeline> = ref<GSAPTimeline>(null);
+  const panelIndex: Ref<number> = ref<number>(-1);
   const panelOpened: Ref<boolean> = ref<boolean>(false);
   const panelOption: Ref<{
     index: number;
@@ -325,6 +497,8 @@
     }[];
   }>(null);
 
+  const exportOpened: Ref<boolean> = ref<boolean>(false);
+
   const selection: Ref<Selection> = ref<Selection>({
     gender: null,
     backgrounds: 1,
@@ -337,15 +511,29 @@
     mouths: 1,
   });
 
-  const bounds: {
-    width: number;
-    height: number;
-    top: number;
-    left: number;
-    name: string;
-    icon: string;
-    identifier: string;
-  }[] = [
+  const name: Ref<string> = ref<string>("");
+
+  const bounds: Ref<
+    {
+      width: number;
+      height: number;
+      top: number;
+      left: number;
+      name: string;
+      icon: string;
+      identifier: string;
+    }[]
+  > = ref<
+    {
+      width: number;
+      height: number;
+      top: number;
+      left: number;
+      name: string;
+      icon: string;
+      identifier: string;
+    }[]
+  >([
     {
       width: 100,
       height: 100,
@@ -374,10 +562,19 @@
       identifier: "hairs",
     },
     {
-      width: 30,
+      width: 40,
       height: 7.5,
       top: 42.5,
-      left: 35,
+      left: 30,
+      name: "accessories",
+      icon: "glasses",
+      identifier: "accessories",
+    },
+    {
+      width: 22.5,
+      height: 7.5,
+      top: 42.5,
+      left: 38.75,
       name: "eyes",
       icon: "eye",
       identifier: "eyes",
@@ -391,7 +588,16 @@
       icon: "feather",
       identifier: "eyebrows",
     },
-  ];
+    {
+      width: 10,
+      height: 5,
+      top: 55,
+      left: 45,
+      name: "mouths",
+      icon: "emoticon",
+      identifier: "mouths",
+    },
+  ]);
 
   const rem: ComputedRef<number> = computed((): number =>
     typeof getComputedStyle === "function"
@@ -457,8 +663,20 @@
   function mouseOutHandler(): void {
     mouseIn.value = false;
   }
-  function mouseIndexChange(e: MouseEvent | TouchEvent): void {
-    if (e.target instanceof HTMLElement) {
+  function mouseIndexChange(e: MouseEvent | TouchEvent | number): void {
+    if (typeof e === "number") {
+      mouseIndex.value = e;
+      const x: number =
+        e === 0 || e === 1 || e === 3
+          ? 5 * rem.value
+          : window.innerWidth - 20 * rem.value;
+      const y: number = window.innerHeight / 2 - 7.5 * rem.value;
+
+      openPanel({
+        clientX: x,
+        clientY: y,
+      });
+    } else if (e.target instanceof HTMLElement) {
       const index: number = parseInt(e.target.dataset.index);
       mouseIndex.value = index;
     }
@@ -474,20 +692,26 @@
     });
   }
 
-  function openPanel(e: MouseEvent): void {
+  function openPanel(
+    e: MouseEvent | { clientX: number; clientY: number }
+  ): void {
+    panelIndex.value = mouseIndex.value;
     panelOption.value = {
       index: mouseIndex.value,
-      name: bounds[mouseIndex.value].name,
-      identifier: bounds[mouseIndex.value].identifier,
+      name: bounds.value[mouseIndex.value].name,
+      identifier: bounds.value[mouseIndex.value].identifier,
       option:
         mouseIndex.value === 0
           ? assets.value.backgrounds
           : assets.value[selection.value.gender][
-              bounds[mouseIndex.value].identifier
+              bounds.value[mouseIndex.value].identifier
             ],
     };
     if (viewMode.value === "desktop") {
-      const { clientX, clientY }: MouseEvent = e;
+      const {
+        clientX,
+        clientY,
+      }: MouseEvent | { clientX: number; clientY: number } = e;
       const x: number =
         clientX + 15 * rem.value >= window.innerWidth
           ? window.innerWidth - 15 * rem.value
@@ -501,8 +725,8 @@
         gsap.to(rdPanel.value, {
           x,
           y,
-          duration: 0.25,
-          ease: "power2.out",
+          duration: 0.5,
+          ease: "power2.inOut",
         });
       } else {
         setTimeout(() => {
@@ -550,21 +774,36 @@
   }
 
   function prevQuestionIndex(): void {
-    animate.questionExit(rdQuestionContainer.value, 1, false, () => {
-      animate.questionInit(rdQuestionContainer.value, 0, false, () => {
-        questionIndex.value = 0;
-      });
-    });
+    animate.questionExit(
+      rdQuestionContainer.value,
+      questionIndex.value,
+      false,
+      () => {
+        animate.questionInit(
+          rdQuestionContainer.value,
+          questionIndex.value - 1,
+          false,
+          () => {
+            questionIndex.value--;
+          }
+        );
+      }
+    );
   }
   function nextQuestionIndex(): void {
-    if (questionIndex.value === 0) {
-      animate.questionExit(rdQuestionContainer.value, 0, false, () => {
-        animate.questionInit(rdQuestionContainer.value, 1, false, () => {
-          questionIndex.value = 1;
+    const temp: number = questionIndex.value;
+    questionIndex.value = -1;
+    if (temp < 2) {
+      animate.questionExit(rdQuestionContainer.value, temp, false, () => {
+        animate.questionInit(rdQuestionContainer.value, temp + 1, false, () => {
+          questionIndex.value = temp + 1;
+          if (questionIndex.value === 2) {
+            rdQuestionAnswerInput.value.focus();
+          }
         });
       });
     } else {
-      animate.questionExit(rdQuestionContainer.value, 1, true, () => {
+      animate.questionExit(rdQuestionContainer.value, 2, true, () => {
         loading.value = true;
 
         assetsCount.value =
@@ -584,6 +823,13 @@
         }, 100);
       });
     }
+  }
+
+  function exportOpen(): void {
+    drawExport();
+    setTimeout(() => {
+      exportOpened.value = true;
+    }, 250);
   }
 
   function draw(): void {
@@ -615,26 +861,6 @@
       1500,
       1500
     );
-    if (
-      selection.value.gender === "female" &&
-      assets.value["female"].hairs[selection.value.hairs - 1].multi
-    ) {
-      canvasCtx.value.drawImage(
-        assets.value["female"].hairs[selection.value.hairs - 1].file[1],
-        0,
-        0,
-        1500,
-        1500
-      );
-    } else {
-      canvasCtx.value.drawImage(
-        assets.value["male"].hairs[selection.value.hairs - 1].file,
-        0,
-        0,
-        1500,
-        1500
-      );
-    }
     canvasCtx.value.drawImage(
       assets.value[selection.value.gender].clothes[selection.value.clothes - 1]
         .file,
@@ -667,7 +893,190 @@
       1500,
       1500
     );
+    canvasCtx.value.drawImage(
+      Array.isArray(
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file
+      )
+        ? assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+            .file[1]
+        : assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+            .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    if (selection.value.accessories) {
+      canvasCtx.value.drawImage(
+        assets.value[selection.value.gender].accessories[
+          selection.value.accessories - 1
+        ].file,
+        0,
+        0,
+        1500,
+        1500
+      );
+    }
     canvasCtx.value.closePath();
+  }
+  function drawExport(): void {
+    const canvasCtx = rdExportCanvas.value.getContext("2d");
+    canvasCtx.globalAlpha = 1;
+    canvasCtx.fillStyle = "#000";
+    canvasCtx.strokeStyle = "#000";
+    canvasCtx.lineWidth = 0;
+    canvasCtx.setLineDash([0, 0]);
+    canvasCtx.save();
+    canvasCtx.beginPath();
+    canvasCtx.drawImage(
+      assets.value.backgrounds[selection.value.backgrounds - 1].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    if (
+      selection.value.gender === "female" &&
+      assets.value["female"].hairs[selection.value.hairs - 1].multi
+    ) {
+      canvasCtx.drawImage(
+        assets.value["female"].hairs[selection.value.hairs - 1].file[0],
+        0,
+        0,
+        1500,
+        1500
+      );
+    }
+    canvasCtx.drawImage(
+      assets.value[selection.value.gender].bodies[selection.value.bodies - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.drawImage(
+      assets.value[selection.value.gender].clothes[selection.value.clothes - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.drawImage(
+      assets.value[selection.value.gender].eyes[selection.value.eyes - 1].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.drawImage(
+      assets.value[selection.value.gender].mouths[selection.value.mouths - 1]
+        .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.drawImage(
+      assets.value[selection.value.gender].eyebrows[
+        selection.value.eyebrows - 1
+      ].file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    canvasCtx.drawImage(
+      Array.isArray(
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file
+      )
+        ? assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+            .file[1]
+        : assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+            .file,
+      0,
+      0,
+      1500,
+      1500
+    );
+    if (selection.value.accessories) {
+      canvasCtx.drawImage(
+        assets.value[selection.value.gender].accessories[
+          selection.value.accessories - 1
+        ].file,
+        0,
+        0,
+        1500,
+        1500
+      );
+    }
+
+    const imageOne: HTMLImageElement = new Image();
+    const imageTwo: HTMLImageElement = new Image();
+    const imageThree: HTMLImageElement = new Image();
+
+    imageOne.onload = () => {
+      canvasCtx.drawImage(imageOne, 50, 50, 100, 100);
+    };
+    imageTwo.onload = () => {
+      canvasCtx.drawImage(
+        imageTwo,
+        200,
+        50,
+        (imageTwo.width * 100) / imageTwo.height,
+        100
+      );
+    };
+    imageThree.onload = () => {
+      canvasCtx.drawImage(
+        imageThree,
+        1450 - (imageThree.width * 100) / imageThree.height,
+        50,
+        (imageThree.width * 100) / imageThree.height,
+        100
+      );
+    };
+
+    imageOne.src = "uc_logo.webp";
+    imageTwo.src = "vcd_logo.webp";
+    imageThree.src = "artxplosion_logo.png";
+
+    canvasCtx.closePath();
+  }
+
+  function updateName(e: InputEvent): void {
+    if (e.target instanceof HTMLInputElement) {
+      const value: string = e.target.value;
+      name.value = value;
+    }
+  }
+
+  function download(): void {
+    const rdTextarea: HTMLTextAreaElement = document.createElement("textarea");
+    rdTextarea.innerHTML = `Hi, ${name.value} here! Imbued with all the cosmic powers that burst from ‘the big bang phenomenon,’ I finally find my IncarnaXion, and now I’m ready to BLAST OFF to ArtXplosion!!!\r\n\r\nLet’s take a journey together into this creative galaxy! Visit @vcd.outliningdesign to incarnate yourself and get ready to BLAST OFF!!\r\n\r\n#ArtXplosion #VCDears #OutliningDesign2023 #IncarnaXion`;
+    rdTextarea.select();
+    rdTextarea.setSelectionRange(0, 999999);
+    navigator.clipboard.writeText(rdTextarea.value);
+    rdTextarea.remove();
+
+    let base64: string = rdExportCanvas.value.toDataURL("image/png");
+    base64 = base64.replace(
+      /^data:image\/[^;]*/,
+      "data:application/octet-stream"
+    );
+    base64 = base64.replace(
+      /^data:application\/octet-stream/,
+      "data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Avatar.png"
+    );
+
+    const rdAnchor: HTMLAnchorElement = document.createElement("a");
+    rdAnchor.setAttribute("href", base64);
+    rdAnchor.setAttribute("download", "Avatar.png");
+    rdAnchor.click();
+    rdAnchor.remove();
   }
 
   const animate = {
@@ -918,13 +1327,13 @@
         .to(
           rdContainer,
           {
-            y: `-${window.innerWidth / 2 + 2 * rem.value}`,
+            y: `-${window.innerHeight * 0.2 + 2 * rem.value}`,
             duration: 0.25,
             ease: "power2.out",
           },
           "<0"
         )
-        .to(rdPanel.children[1], {
+        .to(gsap.utils.toArray(rdPanel.children).slice(1), {
           opacity: 1,
           duration: 0.25,
         });
@@ -942,7 +1351,7 @@
         },
       });
 
-      tl.to(rdPanel.children[1], {
+      tl.to(gsap.utils.toArray(rdPanel.children).slice(1), {
         opacity: 0,
         duration: 0.25,
       })
@@ -1093,8 +1502,8 @@
       if (viewMode.value === "desktop") {
         if (val) {
           mouseActive.value = {
-            icon: bounds[mouseIndex.value].icon,
-            name: bounds[mouseIndex.value].name,
+            icon: bounds.value[mouseIndex.value].icon,
+            name: bounds.value[mouseIndex.value].name,
           };
           if (mouseAnim.value) mouseAnim.value.kill();
           if (mouseTextAnim.value) mouseTextAnim.value.kill();
@@ -1116,8 +1525,8 @@
         if (mouseTextAnim.value) mouseTextAnim.value.kill();
         mouseTextAnim.value = animate.cursorTextHide(rdCursor.value, () => {
           mouseActive.value = {
-            icon: bounds[val].icon,
-            name: bounds[val].name,
+            icon: bounds.value[val].icon,
+            name: bounds.value[val].name,
           };
           mouseTextAnim.value = animate.cursorTextShow(rdCursor.value, true);
         });
@@ -1146,6 +1555,74 @@
           canvasCtx.value.save();
 
           draw();
+
+          if (selection.value.gender === "female") {
+            bounds.value = [
+              {
+                width: 100,
+                height: 100,
+                top: 0,
+                left: 0,
+                name: "backdrop",
+                icon: "palette",
+                identifier: "backgrounds",
+              },
+              {
+                width: 55,
+                height: 27.5,
+                top: 72.5,
+                left: 22.5,
+                name: "clothing",
+                icon: "clothing-woman",
+                identifier: "clothes",
+              },
+              {
+                width: 50,
+                height: 50,
+                top: 30,
+                left: 25,
+                name: "hair",
+                icon: "face-woman",
+                identifier: "hairs",
+              },
+              {
+                width: 30,
+                height: 7.5,
+                top: 52.5,
+                left: 35,
+                name: "accessories",
+                icon: "glasses",
+                identifier: "accessories",
+              },
+              {
+                width: 22.5,
+                height: 7.5,
+                top: 52.5,
+                left: 38.75,
+                name: "eyes",
+                icon: "eye",
+                identifier: "eyes",
+              },
+              {
+                width: 30,
+                height: 5,
+                top: 47.5,
+                left: 35,
+                name: "eyebrows",
+                icon: "feather",
+                identifier: "eyebrows",
+              },
+              {
+                width: 10,
+                height: 5,
+                top: 65,
+                left: 45,
+                name: "mouths",
+                icon: "emoticon",
+                identifier: "mouths",
+              },
+            ];
+          }
 
           setTimeout(() => {
             animate.loaderExit(rdLoadingContainer.value, () => {
@@ -1298,6 +1775,75 @@
         }
       }
     }
+    .rd-action-container {
+      position: absolute;
+      top: 50%;
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      transform: translateY(-50%);
+      &.rd-action-container-left {
+        left: 2rem;
+      }
+      &.rd-action-container-right {
+        right: 2rem;
+      }
+    }
+    .rd-export-button-container {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      button.rd-export-button {
+        cursor: pointer;
+        position: relative;
+        height: 2rem;
+        padding: 0 0.75rem;
+        border-radius: 0.5rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.5s scale, 0.25s filter, 0.25s opacity;
+        &:active {
+          scale: 0.875 !important;
+          transition: 0.25s scale;
+          &::after {
+            opacity: 0.25;
+            transition: 0.25s opacity;
+          }
+        }
+        &:hover {
+          &::before {
+            opacity: 1;
+          }
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          pointer-events: none;
+          width: 100%;
+          height: 100%;
+          border-radius: 0.5rem;
+          background: #000;
+          opacity: 0;
+          transition: 0.5s opacity;
+        }
+        &::before {
+          content: "";
+          pointer-events: none;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          box-shadow: 0 0 2rem var(--primary-color);
+          border-radius: 0.5rem;
+          opacity: 0;
+          transition: 0.25s opacity;
+        }
+      }
+    }
     .rd-panel-container {
       pointer-events: none;
       position: absolute;
@@ -1312,7 +1858,7 @@
         border-radius: 1rem;
         padding: 1rem;
         box-sizing: border-box;
-        background: var(--background-depth-one-color);
+        background: #fff;
         box-shadow: var(--box-shadow);
         opacity: 0;
         transform-origin: top left;
@@ -1334,6 +1880,9 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
+          span.rd-panel-title {
+            color: #000;
+          }
           &::after {
             content: "";
             top: 100%;
@@ -1396,7 +1945,7 @@
               width: 100%;
               height: 100%;
               border-radius: 0.5rem;
-              background: var(--background-depth-two-color);
+              background: #f0f0f0;
             }
             &:hover::before {
               width: calc(100% + 8px);
@@ -1495,6 +2044,41 @@
               transition: 0.25s opacity;
             }
           }
+          input.rd-question-answer {
+            z-index: 1;
+            cursor: auto;
+            position: relative;
+            width: 30vw;
+            height: 3rem;
+            padding: 0 1rem;
+            border-radius: 1rem;
+            border: 0.25rem solid var(--background-depth-three-color);
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(-2rem);
+            transition: 0.25s border-color;
+            color: #fff;
+            &:focus {
+              border-color: var(--primary-color);
+              outline: none;
+              & + .rd-question-answer-shadow {
+                opacity: 1;
+                scale: 1;
+              }
+            }
+          }
+          .rd-question-answer-shadow {
+            z-index: 0;
+            pointer-events: none;
+            position: absolute;
+            width: 30vw;
+            height: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 2rem var(--primary-color);
+            opacity: 0;
+            scale: 0.5;
+            transition: 0.25s opacity, 0.25s scale ease-out;
+          }
         }
         &.rd-question-container-active {
           pointer-events: all;
@@ -1587,6 +2171,111 @@
         }
       }
     }
+    .rd-export-container {
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--background-depth-one-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: 0.5s opacity;
+      span.rd-export-title {
+        position: relative;
+        color: #fff;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        // transform: translateY(-100%);
+        // opacity: 0;
+      }
+      .rd-export-image-container {
+        position: relative;
+        width: 20vw;
+        height: 20vw;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        background: var(--background-depth-two-color);
+        display: flex;
+        overflow: hidden;
+        canvas.rd-export-canvas {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .rd-export-caption-container {
+        position: relative;
+        width: 20vw;
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 0.25rem solid var(--background-depth-three-color);
+        box-sizing: border-box;
+        display: flex;
+        p.rd-export-caption {
+          position: relative;
+          color: #fff;
+          line-height: 1.5;
+        }
+      }
+      button.rd-export-button {
+        cursor: pointer;
+        position: relative;
+        width: 20vw;
+        height: 2rem;
+        padding: 0 0.75rem;
+        margin-top: 2rem;
+        border-radius: 0.5rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.5s scale, 0.25s filter, 0.25s opacity;
+        &:active {
+          scale: 0.875 !important;
+          transition: 0.25s scale;
+          &::after {
+            opacity: 0.25;
+            transition: 0.25s opacity;
+          }
+        }
+        &:hover {
+          &::before {
+            opacity: 1;
+          }
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          pointer-events: none;
+          width: 100%;
+          height: 100%;
+          border-radius: 0.5rem;
+          background: #000;
+          opacity: 0;
+          transition: 0.5s opacity;
+        }
+        &::before {
+          content: "";
+          pointer-events: none;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          box-shadow: 0 0 2rem var(--primary-color);
+          border-radius: 0.5rem;
+          opacity: 0;
+          transition: 0.25s opacity;
+        }
+      }
+      &.rd-export-container-active {
+        pointer-events: all;
+        opacity: 1;
+      }
+    }
     .rd-loading-container {
       position: fixed;
       top: 0;
@@ -1615,12 +2304,12 @@
         }
       }
     }
-    @media only screen and (max-width: 1023px) {
+    @media only screen and (max-width: 1024px) {
       .rd-canvas-container {
-        top: calc(50% - 40vw);
-        left: calc(50% - 40vw);
-        width: 80vw;
-        height: 80vw;
+        top: calc(50% - 50vw + 1rem);
+        left: calc(50% - 50vw + 1rem);
+        width: calc(100vw - 2rem);
+        height: calc(100vw - 2rem);
         box-sizing: border-box;
       }
       .rd-panel-container {
@@ -1628,7 +2317,7 @@
         top: auto;
         bottom: 0 !important;
         width: 100vw;
-        height: calc(100vw + 4rem);
+        height: calc(40vh + 4rem);
         background: var(--background-depth-one-color);
         box-shadow: 0 -0.5rem 1rem rgba(199, 199, 199, 0.125);
         display: flex;
@@ -1653,11 +2342,29 @@
             background: var(--border-color);
           }
         }
+        .rd-panel-actions-wrapper {
+          position: relative;
+          width: 100%;
+          height: 2rem;
+          padding: 0 1rem;
+          margin: 1rem 0;
+          box-sizing: border-box;
+          display: flex;
+          flex-shrink: 0;
+          overflow-x: auto;
+          opacity: 0;
+          .rd-panel-actions-container {
+            position: relative;
+            height: 100%;
+            display: flex;
+            gap: 1rem;
+          }
+        }
         .rd-panel-body {
           position: relative;
           width: 100%;
-          height: 100vw;
-          padding: 1rem;
+          height: calc(40vh - 4rem);
+          padding: 0 1rem 1rem 1rem;
           box-sizing: border-box;
           display: flex;
           gap: 1rem;
@@ -1667,13 +2374,15 @@
           .rd-panel-content {
             cursor: pointer;
             position: relative;
-            width: calc(50vw - 1.5rem);
-            height: calc(50vw - 1.5rem);
+            width: calc((100vw - 4rem) / 3);
+            height: calc((100vw - 4rem) / 3);
             border-radius: 0.5rem;
             .rd-panel-content-image {
               pointer-events: none;
               z-index: 2;
-              position: relative;
+              position: absolute;
+              left: 0;
+              top: 0;
               width: 100%;
               height: 100%;
               border-radius: 0.5rem;
@@ -1704,7 +2413,7 @@
               width: 100%;
               height: 100%;
               border-radius: 0.5rem;
-              background: var(--background-depth-two-color);
+              background: #f0f0f0;
             }
             &:hover::before {
               width: calc(100% + 8px);
@@ -1736,10 +2445,53 @@
                 padding: 3vw;
               }
             }
+            input.rd-question-answer {
+              width: calc(100vw - 2rem);
+            }
+            .rd-question-answer-shadow {
+              width: calc(100vw - 2rem);
+            }
           }
         }
         button.rd-question-button {
-          bottom: 2rem;
+          bottom: 1rem;
+          &.rd-question-button-prev {
+            left: 1rem;
+          }
+          &.rd-question-button-next {
+            right: 1rem;
+          }
+        }
+      }
+      .rd-export-button-container {
+        bottom: 1rem;
+        right: 1rem;
+        button.rd-export-button {
+          width: calc(100vw - 2rem);
+        }
+      }
+      .rd-export-container {
+        height: 100vh;
+        // height: calc(100 * var(--vh));
+        span.rd-export-title {
+          position: absolute;
+          top: 1rem;
+        }
+        .rd-export-image-container {
+          width: calc(100vw - 2rem);
+          height: calc(100vw - 2rem);
+          flex-shrink: 0;
+        }
+        .rd-export-caption-container {
+          width: calc(100vw - 2rem);
+          height: calc(60vw - 2rem);
+          overflow-y: auto;
+        }
+        button.rd-export-button {
+          position: absolute;
+          bottom: 1rem;
+          width: calc(100vw - 2rem);
+          margin-top: 0 !important;
         }
       }
     }

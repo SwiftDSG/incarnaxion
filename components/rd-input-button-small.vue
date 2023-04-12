@@ -267,10 +267,13 @@
       background: var(--primary-color);
       border-color: var(--primary-color);
     }
-    &:hover:not(:active) {
-      .rd-input-tooltip {
-        opacity: 1;
-        transform: scale(1);
+    &:hover {
+      z-index: 10;
+      &:not(:active) {
+        .rd-input-tooltip {
+          opacity: 1;
+          transform: scale(1);
+        }
       }
     }
     &:focus-visible {

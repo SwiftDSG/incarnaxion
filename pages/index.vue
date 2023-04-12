@@ -902,7 +902,7 @@
         z-index: 2;
         width: 100%;
         height: 100%;
-        padding: 2rem 2rem 0 2rem;
+        padding: 1rem 1rem 0 1rem;
         h1.rd-description-title {
           .rd-sentence-row {
             .rd-word-wrapper {
@@ -930,7 +930,7 @@
         }
         .rd-description-button {
           position: absolute;
-          bottom: calc(2rem + 37.5vw - 3.5rem);
+          bottom: calc(1rem + 37.5vw - 3.5rem);
           left: calc(50vw - 3.5rem);
         }
       }
@@ -941,13 +941,13 @@
         width: 100%;
         height: 60vh;
         .rd-image-planet {
-          bottom: 2rem;
+          bottom: 1rem;
           width: 75vw;
           height: 75vw;
           transform: translateY(150%) rotate(-180deg);
         }
         .rd-image-avatar {
-          bottom: calc(75vw - 1rem);
+          bottom: calc(75vw - 2rem);
           width: 75vw;
           height: 75vw;
         }
@@ -971,22 +971,6 @@
           svg.rd-background-decoration-container {
             opacity: 0.05;
           }
-        }
-      }
-    }
-    @media only screen and (max-width: 400px) {
-      .rd-description-container {
-        padding: 2rem 1.5rem 0 1.5rem;
-        .rd-description-button {
-          bottom: calc(1.5rem + 37.5vw - 3.5rem);
-        }
-      }
-      .rd-attraction-container {
-        .rd-image-planet {
-          bottom: 1.5rem;
-        }
-        .rd-image-avatar {
-          display: none;
         }
       }
     }

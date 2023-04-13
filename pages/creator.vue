@@ -151,6 +151,21 @@
       </div>
       <div class="rd-panel-body">
         <div
+          v-if="panelOption.identifier === 'accessories'"
+          class="rd-panel-content"
+          :class="
+            selection[panelOption.identifier] === 0
+              ? 'rd-panel-content-active'
+              : ''
+          "
+          @click="changeAsset"
+          data-index="0"
+        >
+          <div class="rd-panel-content-icon-container">
+            <rd-svg class="rd-panel-content-icon" name="close" />
+          </div>
+        </div>
+        <div
           v-for="(option, i) in panelOption.option"
           :key="i"
           class="rd-panel-content"
@@ -193,6 +208,21 @@
           <rd-input-button-small icon="close" @clicked="closePanel" />
         </div>
         <div class="rd-panel-body">
+          <div
+            v-if="panelOption.identifier === 'accessories'"
+            class="rd-panel-content"
+            :class="
+              selection[panelOption.identifier] === 0
+                ? 'rd-panel-content-active'
+                : ''
+            "
+            @click="changeAsset"
+            data-index="0"
+          >
+            <div class="rd-panel-content-icon-container">
+              <rd-svg class="rd-panel-content-icon" name="close" />
+            </div>
+          </div>
           <div
             v-for="(option, i) in panelOption.option"
             :key="i"
@@ -1965,6 +1995,16 @@
               background-size: contain;
               object-fit: contain;
             }
+            .rd-panel-content-icon-container {
+              position: relative;
+              width: 100%;
+              height: 100%;
+              padding: 2rem;
+              box-sizing: border-box;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
             &::before {
               z-index: 0;
               content: "";
@@ -2454,6 +2494,16 @@
               border-radius: 0.5rem;
               background-size: contain;
               object-fit: contain;
+            }
+            .rd-panel-content-icon-container {
+              position: relative;
+              width: 100%;
+              height: 100%;
+              padding: calc((100vw - 4rem) / 9);
+              box-sizing: border-box;
+              display: flex;
+              justify-content: center;
+              align-items: center;
             }
             &::before {
               z-index: 0;

@@ -1,10 +1,5 @@
 <template>
   <div class="rd-layout" ref="rdLayout">
-    <header v-if="viewMode === 'desktop'" class="rd-header">
-      <div class="rd-logo-container">
-        <img src="/incarnation_logo.webp" class="rd-logo" />
-      </div>
-    </header>
     <main ref="rdBody" class="rd-body">
       <nuxt-page class="rd-main" />
     </main>
@@ -30,6 +25,13 @@
     const mediaQuery: MediaQueryList = window.matchMedia("(max-width: 1024px)");
     mediaQuery.addEventListener("change", resizeHandler);
     resizeHandler(mediaQuery);
+
+    const vh: number = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    window.addEventListener("resize", () => {
+      const vh: number = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    });
   });
 </script>
 
@@ -73,22 +75,14 @@
     --warning-color: #ffc904;
     --success-color: #6bc785;
     --border-color: #ececec;
-    --font-main-color: #020f13;
+    --font-main-color: #b8bdf0;
     --font-secondary-color: #7f7f7f;
-    --background-depth-one-color: #ffffff;
-    --background-depth-two-color: #f8f8f8;
-    --background-depth-three-color: #ececec;
+    --background-depth-one-color: #050724;
+    --background-depth-two-color: #070b36;
+    --background-depth-three-color: #080c3d;
+    --border-color: #0b0675;
     --border: 1px solid var(--border-color);
-    --box-shadow: 0 0.5rem 1rem rgba(199, 199, 199, 0.25);
-
-    @media (prefers-color-scheme: dark) {
-      --background-depth-one-color: #050724;
-      --background-depth-two-color: #070b36;
-      --background-depth-three-color: #080c3d;
-      --border-color: #0b0675;
-      --box-shadow: 0 0.5rem 1rem rgba(33, 31, 90, 0.125);
-      --font-main-color: #b8bdf0;
-    }
+    --box-shadow: 0 0.5rem 1rem rgba(33, 31, 90, 0.125);
   }
   html,
   body {

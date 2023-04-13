@@ -1,5 +1,10 @@
 <template>
   <div class="rd-container">
+    <header class="rd-header">
+      <div class="rd-logo-container" @click="goHome">
+        <img src="/incarnation_logo.webp" class="rd-logo" />
+      </div>
+    </header>
     <div v-if="loaded" ref="rdContainer" class="rd-canvas-container">
       <canvas
         class="rd-canvas"
@@ -380,6 +385,11 @@
       ref="rdExportContainer"
       :class="exportOpened ? 'rd-export-container-active' : ''"
     >
+      <rd-input-button-small
+        class="rd-export-close-button"
+        icon="close"
+        @clicked="exportOpened = false"
+      />
       <span class="rd-export-title rd-headline-4">Share your avatar!</span>
       <div class="rd-export-image-container">
         <canvas
@@ -416,6 +426,7 @@
         ></div>
       </div>
     </div>
+    <div class="rd-overlay-container" ref="rdOverlay"></div>
   </div>
 </template>
 
@@ -436,16 +447,16 @@
   }
 
   const { viewMode, assets, loaded } = useMain();
+  const router = useRouter();
 
   const rdQuestionContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdLoadingContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
   const rdExportCanvas: Ref<HTMLCanvasElement> = ref<HTMLCanvasElement>(null);
-  const rdExportCaption: Ref<HTMLParagraphElement> =
-    ref<HTMLParagraphElement>(null);
   const rdCursor: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdPanel: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
+  const rdOverlay: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
   const rdQuestionAnswerInput: Ref<HTMLInputElement> =
     ref<HTMLInputElement>(null);
 
@@ -1079,6 +1090,17 @@
     rdAnchor.remove();
   }
 
+  function goHome(): void {
+    gsap.to(rdOverlay.value, {
+      opacity: 1,
+      duration: 0.25,
+      ease: "power0.linear",
+      onComplete() {
+        router.push("/");
+      },
+    });
+  }
+
   const animate = {
     loaderInit(rdLoadingContainer: HTMLElement, cb: () => void): void {
       const tl: GSAPTimeline = gsap.timeline({ onComplete: cb });
@@ -1637,6 +1659,8 @@
   );
 
   onMounted(() => {
+    loaded.value = false;
+
     setTimeout(() => {
       animate.questionInit(rdQuestionContainer.value, 0, true, () => {
         questionIndex.value = 0;
@@ -1658,6 +1682,26 @@
     width: 100vw;
     height: 100vh;
     display: flex;
+    .rd-header {
+      z-index: 2;
+      position: absolute;
+      width: 100%;
+      height: 5rem;
+      padding: 2rem 2rem 0 2rem;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .rd-logo-container {
+        cursor: pointer;
+        position: relative;
+        height: 100%;
+        display: flex;
+        * {
+          pointer-events: none;
+        }
+      }
+    }
     .rd-canvas-container {
       position: absolute;
       top: calc(50% - 37.5vh);
@@ -2172,6 +2216,7 @@
       }
     }
     .rd-export-container {
+      z-index: 3;
       pointer-events: none;
       position: absolute;
       width: 100%;
@@ -2183,6 +2228,11 @@
       align-items: center;
       opacity: 0;
       transition: 0.5s opacity;
+      .rd-export-close-button {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+      }
       span.rd-export-title {
         position: relative;
         color: #fff;
@@ -2304,7 +2354,23 @@
         }
       }
     }
+    .rd-overlay-container {
+      pointer-events: none;
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--background-depth-one-color);
+      opacity: 0;
+    }
     @media only screen and (max-width: 1024px) {
+      .rd-header {
+        height: 3rem;
+        padding: 1rem 1rem 0 1rem;
+        justify-content: center;
+      }
       .rd-canvas-container {
         top: calc(50% - 50vw + 1rem);
         left: calc(50% - 50vw + 1rem);
@@ -2472,10 +2538,17 @@
       }
       .rd-export-container {
         height: 100vh;
-        // height: calc(100 * var(--vh));
+        height: calc(100 * var(--vh));
+        .rd-export-close-button {
+          top: 1rem;
+          left: 1rem;
+        }
         span.rd-export-title {
           position: absolute;
           top: 1rem;
+          height: 2rem;
+          display: flex;
+          align-items: center;
         }
         .rd-export-image-container {
           width: calc(100vw - 2rem);

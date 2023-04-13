@@ -1,5 +1,10 @@
 <template>
   <div class="rd-container">
+    <header v-if="viewMode === 'desktop'" class="rd-header">
+      <div class="rd-logo-container">
+        <img src="/incarnation_logo.webp" class="rd-logo" />
+      </div>
+    </header>
     <div
       class="rd-image-preloader"
       ref="rdImagePreloadder"
@@ -452,7 +457,12 @@
     },
     backgroundExit(rdBackground: HTMLElement, cb: () => void): void {
       const tl: GSAPTimeline = gsap.timeline({
-        onComplete: cb,
+        onComplete() {
+          rdBlobOne.setAttribute("style", "transform: scale(0)");
+          rdBlobTwo.setAttribute("style", "transform: scale(0)");
+          rdLines.setAttribute("style", "");
+          cb();
+        },
       });
 
       const rdBlobOne: HTMLElement = rdBackground.querySelector(
@@ -520,18 +530,20 @@
   }
 
   onMounted(() => {
-    backgroundInitAnim.value = animate.backgroundInit(
-      rdBackground.value,
-      () => {
-        initAnim.value = animate.init(
-          rdDescriptionTitle.value,
-          rdDescription.value,
-          rdDescriptionSponsor.value,
-          rdAttraction.value,
-          rdButton.value
-        );
-      }
-    );
+    setTimeout(() => {
+      backgroundInitAnim.value = animate.backgroundInit(
+        rdBackground.value,
+        () => {
+          initAnim.value = animate.init(
+            rdDescriptionTitle.value,
+            rdDescription.value,
+            rdDescriptionSponsor.value,
+            rdAttraction.value,
+            rdButton.value
+          );
+        }
+      );
+    }, 500);
   });
 </script>
 
@@ -545,6 +557,24 @@
     justify-content: flex-start;
     align-items: center;
     overflow: hidden;
+    .rd-header {
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5rem;
+      padding: 2rem 2rem 0 2rem;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .rd-logo-container {
+        position: relative;
+        height: 100%;
+        display: flex;
+      }
+    }
     .rd-description-container {
       position: relative;
       width: 60%;

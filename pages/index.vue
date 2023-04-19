@@ -553,6 +553,7 @@
     top: 0;
     width: 100vw;
     height: 100vh;
+    height: calc(var(--vh) * 100);
     display: flex;
     justify-content: flex-start;
     align-items: center;

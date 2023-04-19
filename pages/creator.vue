@@ -1116,7 +1116,7 @@
         title: "Download & Copy Success",
         message: "Go on and spread the message!",
       });
-    }, 250);
+    }, 500);
   }
 
   function goHome(): void {

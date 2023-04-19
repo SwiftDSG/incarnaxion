@@ -220,7 +220,11 @@
             data-index="0"
           >
             <div class="rd-panel-content-icon-container">
-              <rd-svg class="rd-panel-content-icon" name="close" />
+              <rd-svg
+                class="rd-panel-content-icon"
+                name="close"
+                color="secondary"
+              />
             </div>
           </div>
           <div
@@ -294,11 +298,7 @@
             @click="selection.gender = 'male'"
           >
             <div class="rd-question-answer-icon-container">
-              <rd-svg
-                class="rd-question-answer-icon"
-                name="male"
-                color="secondary"
-              />
+              <rd-svg class="rd-question-answer-icon" name="male" />
             </div>
           </div>
           <div
@@ -309,11 +309,7 @@
             @click="selection.gender = 'female'"
           >
             <div class="rd-question-answer-icon-container">
-              <rd-svg
-                class="rd-question-answer-icon"
-                name="female"
-                color="secondary"
-              />
+              <rd-svg class="rd-question-answer-icon" name="female" />
             </div>
           </div>
         </div>
@@ -382,11 +378,7 @@
         @click="prevQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg
-            name="arrow-left"
-            class="rd-question-button-icon"
-            color="secondary"
-          />
+          <rd-svg name="arrow-left" class="rd-question-button-icon" />
         </div>
       </button>
       <button
@@ -402,11 +394,7 @@
         @click="nextQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg
-            name="arrow-right"
-            class="rd-question-button-icon"
-            color="secondary"
-          />
+          <rd-svg name="arrow-right" class="rd-question-button-icon" />
         </div>
       </button>
     </div>
@@ -445,7 +433,7 @@
         </p>
       </div>
       <button @click="download" class="rd-export-button rd-button-text">
-        DOWNLOAD
+        DOWNLOAD & COPY
       </button>
     </div>
     <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
@@ -477,6 +465,7 @@
   }
 
   const { viewMode, assets, loaded } = useMain();
+  const { setAlert } = useAlert();
   const router = useRouter();
 
   const rdQuestionContainer: Ref<HTMLDivElement> = ref<HTMLDivElement>(null);
@@ -1118,6 +1107,16 @@
     rdAnchor.setAttribute("download", "Avatar.png");
     rdAnchor.click();
     rdAnchor.remove();
+
+    exportOpened.value = false;
+
+    setTimeout(() => {
+      setAlert({
+        type: "success",
+        title: "Download & Copy Success",
+        message: "Go on and spread the message!",
+      });
+    }, 250);
   }
 
   function goHome(): void {
@@ -1711,6 +1710,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: calc(var(--vh) * 100);
     display: flex;
     .rd-header {
       z-index: 2;
@@ -1996,6 +1996,7 @@
               object-fit: contain;
             }
             .rd-panel-content-icon-container {
+              z-index: 2;
               position: relative;
               width: 100%;
               height: 100%;
@@ -2370,8 +2371,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: var(--background-depth-one-color);
       display: flex;
       justify-content: center;
@@ -2397,7 +2398,7 @@
     .rd-overlay-container {
       pointer-events: none;
       z-index: 1;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;

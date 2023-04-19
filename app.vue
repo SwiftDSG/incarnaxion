@@ -1,5 +1,6 @@
 <template>
   <div class="rd-layout" ref="rdLayout">
+    <rd-alert />
     <main ref="rdBody" class="rd-body">
       <nuxt-page class="rd-main" />
     </main>
@@ -70,12 +71,12 @@
 <style lang="scss">
   :root {
     --primary-color: #864fef;
-    --secondary-color: #fff;
+    --secondary-color: #000;
     --error-color: #ff584c;
     --warning-color: #ffc904;
     --success-color: #6bc785;
     --border-color: #ececec;
-    --font-main-color: #b8bdf0;
+    --font-main-color: #fff;
     --font-secondary-color: #7f7f7f;
     --background-depth-one-color: #050724;
     --background-depth-two-color: #070b36;

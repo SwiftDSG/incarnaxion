@@ -214,12 +214,14 @@ export default function () {
         { src: `${config.public.base}/assets/male/clothes/34.svg` },
         { src: `${config.public.base}/assets/male/clothes/35.svg` },
         { src: `${config.public.base}/assets/male/clothes/36.svg` },
+        { src: `${config.public.base}/assets/male/clothes/37.svg` },
       ],
       accessories: [
         { src: `${config.public.base}/assets/male/accessories/1.svg` },
         { src: `${config.public.base}/assets/male/accessories/2.svg` },
         { src: `${config.public.base}/assets/male/accessories/3.svg` },
         { src: `${config.public.base}/assets/male/accessories/4.svg` },
+        { src: `${config.public.base}/assets/male/accessories/5.svg` },
       ],
       mouths: [
         { src: `${config.public.base}/assets/male/mouths/1.svg` },
@@ -430,9 +432,6 @@ export default function () {
         { src: `${config.public.base}/assets/female/accessories/6.svg` },
         { src: `${config.public.base}/assets/female/accessories/7.svg` },
         { src: `${config.public.base}/assets/female/accessories/8.svg` },
-        { src: `${config.public.base}/assets/female/accessories/9.svg` },
-        { src: `${config.public.base}/assets/female/accessories/10.svg` },
-        { src: `${config.public.base}/assets/female/accessories/11.svg` },
       ],
       mouths: [
         { src: `${config.public.base}/assets/female/mouths/1.svg` },

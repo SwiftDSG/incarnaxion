@@ -158,7 +158,7 @@
         <div class="rd-description-button-background"></div>
         <button class="rd-description-button-input" @click="exit">
           <div class="rd-description-button-input-icon-container">
-            <rd-svg name="play" color="secondary" />
+            <rd-svg name="play" />
           </div>
         </button>
       </div>
@@ -955,13 +955,32 @@
           margin: 1rem 0;
         }
         .rd-description-sponsor {
+          .rd-description-sponsor-container {
+            height: 2rem;
+            span.rd-image-wrapper {
+              &:first-child {
+                span.rd-image-container {
+                  .rd-image {
+                    width: 2rem;
+                  }
+                }
+              }
+              &:last-child {
+                span.rd-image-container {
+                  .rd-image {
+                    width: calc(13rem / 3);
+                  }
+                }
+              }
+            }
+          }
           span.rd-text-wrapper {
             font-size: 0.45rem;
           }
         }
         .rd-description-button {
           position: absolute;
-          bottom: calc(1rem + 37.5vw - 3.5rem);
+          bottom: calc(1rem + 17.5vh - 3.5rem);
           left: calc(50vw - 3.5rem);
         }
       }
@@ -973,14 +992,14 @@
         height: 60vh;
         .rd-image-planet {
           bottom: 1rem;
-          width: 75vw;
-          height: 75vw;
+          width: 35vh;
+          height: 35vh;
           transform: translateY(150%) rotate(-180deg);
         }
         .rd-image-avatar {
-          bottom: calc(75vw - 2rem);
-          width: 75vw;
-          height: 75vw;
+          bottom: calc(35vh - 2rem);
+          width: 35vh;
+          height: 35vh;
         }
       }
       .rd-background {

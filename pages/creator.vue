@@ -872,17 +872,19 @@
       1500
     );
     if (
-      selection.value.gender === "female" &&
-      assets.value["female"].hairs[selection.value.hairs - 1].multi
-    ) {
+      Array.isArray(
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file
+      )
+    )
       canvasCtx.value.drawImage(
-        assets.value["female"].hairs[selection.value.hairs - 1].file[0],
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file[0],
         0,
         0,
         1500,
         1500
       );
-    }
     canvasCtx.value.drawImage(
       assets.value[selection.value.gender].bodies[selection.value.bodies - 1]
         .file,
@@ -967,17 +969,19 @@
       1500
     );
     if (
-      selection.value.gender === "female" &&
-      assets.value["female"].hairs[selection.value.hairs - 1].multi
-    ) {
+      Array.isArray(
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file
+      )
+    )
       canvasCtx.drawImage(
-        assets.value["female"].hairs[selection.value.hairs - 1].file[0],
+        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
+          .file[0],
         0,
         0,
         1500,
         1500
       );
-    }
     canvasCtx.drawImage(
       assets.value[selection.value.gender].bodies[selection.value.bodies - 1]
         .file,

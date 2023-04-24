@@ -1682,6 +1682,11 @@
           setTimeout(() => {
             animate.loaderExit(rdLoadingContainer.value, () => {
               loading.value = false;
+              setAlert({
+                type: "warning",
+                title: "Begin Incarnaxion!",
+                message: "Click on the avatar to begin editing",
+              });
             });
           }, 400);
         }, 100);

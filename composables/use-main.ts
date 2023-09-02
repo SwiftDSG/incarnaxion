@@ -1,37 +1,37 @@
-import { ViewMode } from "~~/interfaces/general"
+import { ViewMode } from "~~/interfaces/general";
 
 export default function () {
   interface Asset {
-    src: string | string[]
-    file?: HTMLImageElement | HTMLImageElement[]
-    multi?: boolean
+    src: string | string[];
+    file?: HTMLImageElement | HTMLImageElement[];
+    multi?: boolean;
   }
 
-  const viewMode = useState<ViewMode>('view-mode', () => null)
+  const viewMode = useState<ViewMode>("view-mode", () => null);
 
-  const config = useRuntimeConfig()
-  const loaded = useState<boolean>('loaded', () => false)
+  const config = useRuntimeConfig();
+  const loaded = useState<boolean>("loaded", () => false);
   const assets = useState<{
     male: {
-      hairs: Asset[]
-      bodies: { src: string, file?: HTMLImageElement }[]
-      eyes: { src: string, file?: HTMLImageElement }[]
-      eyebrows: { src: string, file?: HTMLImageElement }[]
-      clothes: { src: string, file?: HTMLImageElement }[]
-      accessories: { src: string, file?: HTMLImageElement }[]
-      mouths: { src: string, file?: HTMLImageElement }[]
-    }
+      hairs: Asset[];
+      bodies: { src: string; file?: HTMLImageElement }[];
+      eyes: { src: string; file?: HTMLImageElement }[];
+      eyebrows: { src: string; file?: HTMLImageElement }[];
+      clothes: { src: string; file?: HTMLImageElement }[];
+      accessories: { src: string; file?: HTMLImageElement }[];
+      mouths: { src: string; file?: HTMLImageElement }[];
+    };
     female: {
-      hairs: Asset[]
-      bodies: { src: string, file?: HTMLImageElement }[]
-      eyes: { src: string, file?: HTMLImageElement }[]
-      eyebrows: { src: string, file?: HTMLImageElement }[]
-      clothes: { src: string, file?: HTMLImageElement }[]
-      accessories: { src: string, file?: HTMLImageElement }[]
-      mouths: { src: string, file?: HTMLImageElement }[]
-    }
-    backgrounds: { src: string, file?: HTMLImageElement }[]
-  }>('assets', () => ({
+      hairs: Asset[];
+      bodies: { src: string; file?: HTMLImageElement }[];
+      eyes: { src: string; file?: HTMLImageElement }[];
+      eyebrows: { src: string; file?: HTMLImageElement }[];
+      clothes: { src: string; file?: HTMLImageElement }[];
+      accessories: { src: string; file?: HTMLImageElement }[];
+      mouths: { src: string; file?: HTMLImageElement }[];
+    };
+    backgrounds: { src: string; file?: HTMLImageElement }[];
+  }>("assets", () => ({
     male: {
       hairs: [
         { src: `${config.public.base}/assets/male/hairs/1.svg` },
@@ -176,18 +176,90 @@ export default function () {
         { src: `${config.public.base}/assets/male/hairs/140.svg` },
         { src: `${config.public.base}/assets/male/hairs/141.svg` },
         { src: `${config.public.base}/assets/male/hairs/142.svg` },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/143/1.svg`, `${config.public.base}/assets/male/hairs/143/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/144/1.svg`, `${config.public.base}/assets/male/hairs/144/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/145/1.svg`, `${config.public.base}/assets/male/hairs/145/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/146/1.svg`, `${config.public.base}/assets/male/hairs/146/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/147/1.svg`, `${config.public.base}/assets/male/hairs/147/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/148/1.svg`, `${config.public.base}/assets/male/hairs/148/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/149/1.svg`, `${config.public.base}/assets/male/hairs/149/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/150/1.svg`, `${config.public.base}/assets/male/hairs/150/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/151/1.svg`, `${config.public.base}/assets/male/hairs/151/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/152/1.svg`, `${config.public.base}/assets/male/hairs/152/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/153/1.svg`, `${config.public.base}/assets/male/hairs/153/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/male/hairs/154/1.svg`, `${config.public.base}/assets/male/hairs/154/2.svg`] },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/143/1.svg`,
+            `${config.public.base}/assets/male/hairs/143/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/144/1.svg`,
+            `${config.public.base}/assets/male/hairs/144/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/145/1.svg`,
+            `${config.public.base}/assets/male/hairs/145/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/146/1.svg`,
+            `${config.public.base}/assets/male/hairs/146/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/147/1.svg`,
+            `${config.public.base}/assets/male/hairs/147/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/148/1.svg`,
+            `${config.public.base}/assets/male/hairs/148/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/149/1.svg`,
+            `${config.public.base}/assets/male/hairs/149/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/150/1.svg`,
+            `${config.public.base}/assets/male/hairs/150/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/151/1.svg`,
+            `${config.public.base}/assets/male/hairs/151/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/152/1.svg`,
+            `${config.public.base}/assets/male/hairs/152/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/153/1.svg`,
+            `${config.public.base}/assets/male/hairs/153/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/male/hairs/154/1.svg`,
+            `${config.public.base}/assets/male/hairs/154/2.svg`,
+          ],
+        },
       ],
       bodies: [
         { src: `${config.public.base}/assets/male/bodies/1.svg` },
@@ -230,27 +302,27 @@ export default function () {
         { src: `${config.public.base}/assets/male/clothes/14.svg` },
         { src: `${config.public.base}/assets/male/clothes/15.svg` },
         { src: `${config.public.base}/assets/male/clothes/16.svg` },
-        { src: `${config.public.base}/assets/male/clothes/17.svg` },
-        { src: `${config.public.base}/assets/male/clothes/18.svg` },
-        { src: `${config.public.base}/assets/male/clothes/19.svg` },
-        { src: `${config.public.base}/assets/male/clothes/20.svg` },
-        { src: `${config.public.base}/assets/male/clothes/21.svg` },
-        { src: `${config.public.base}/assets/male/clothes/22.svg` },
-        { src: `${config.public.base}/assets/male/clothes/23.svg` },
-        { src: `${config.public.base}/assets/male/clothes/24.svg` },
-        { src: `${config.public.base}/assets/male/clothes/25.svg` },
-        { src: `${config.public.base}/assets/male/clothes/26.svg` },
-        { src: `${config.public.base}/assets/male/clothes/27.svg` },
-        { src: `${config.public.base}/assets/male/clothes/28.svg` },
-        { src: `${config.public.base}/assets/male/clothes/29.svg` },
-        { src: `${config.public.base}/assets/male/clothes/30.svg` },
-        { src: `${config.public.base}/assets/male/clothes/31.svg` },
-        { src: `${config.public.base}/assets/male/clothes/32.svg` },
-        { src: `${config.public.base}/assets/male/clothes/33.svg` },
-        { src: `${config.public.base}/assets/male/clothes/34.svg` },
-        { src: `${config.public.base}/assets/male/clothes/35.svg` },
-        { src: `${config.public.base}/assets/male/clothes/36.svg` },
-        { src: `${config.public.base}/assets/male/clothes/37.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/17.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/18.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/19.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/20.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/21.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/22.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/23.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/24.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/25.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/26.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/27.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/28.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/29.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/30.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/31.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/32.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/33.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/34.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/35.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/36.svg` },
+        // { src: `${config.public.base}/assets/male/clothes/37.svg` },
       ],
       accessories: [
         { src: `${config.public.base}/assets/male/accessories/1.svg` },
@@ -258,6 +330,10 @@ export default function () {
         { src: `${config.public.base}/assets/male/accessories/3.svg` },
         { src: `${config.public.base}/assets/male/accessories/4.svg` },
         { src: `${config.public.base}/assets/male/accessories/5.svg` },
+        { src: `${config.public.base}/assets/male/accessories/6.svg` },
+        { src: `${config.public.base}/assets/male/accessories/7.svg` },
+        { src: `${config.public.base}/assets/male/accessories/8.svg` },
+        { src: `${config.public.base}/assets/male/accessories/9.svg` },
       ],
       mouths: [
         { src: `${config.public.base}/assets/male/mouths/1.svg` },
@@ -269,92 +345,584 @@ export default function () {
         { src: `${config.public.base}/assets/male/mouths/7.svg` },
         { src: `${config.public.base}/assets/male/mouths/8.svg` },
         { src: `${config.public.base}/assets/male/mouths/9.svg` },
-      ]
+      ],
     },
     female: {
       hairs: [
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/1/1.svg`, `${config.public.base}/assets/female/hairs/1/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/2/1.svg`, `${config.public.base}/assets/female/hairs/2/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/3/1.svg`, `${config.public.base}/assets/female/hairs/3/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/4/1.svg`, `${config.public.base}/assets/female/hairs/4/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/5/1.svg`, `${config.public.base}/assets/female/hairs/5/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/6/1.svg`, `${config.public.base}/assets/female/hairs/6/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/7/1.svg`, `${config.public.base}/assets/female/hairs/7/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/8/1.svg`, `${config.public.base}/assets/female/hairs/8/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/9/1.svg`, `${config.public.base}/assets/female/hairs/9/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/10/1.svg`, `${config.public.base}/assets/female/hairs/10/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/11/1.svg`, `${config.public.base}/assets/female/hairs/11/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/12/1.svg`, `${config.public.base}/assets/female/hairs/12/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/13/1.svg`, `${config.public.base}/assets/female/hairs/13/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/14/1.svg`, `${config.public.base}/assets/female/hairs/14/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/15/1.svg`, `${config.public.base}/assets/female/hairs/15/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/16/1.svg`, `${config.public.base}/assets/female/hairs/16/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/17/1.svg`, `${config.public.base}/assets/female/hairs/17/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/18/1.svg`, `${config.public.base}/assets/female/hairs/18/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/19/1.svg`, `${config.public.base}/assets/female/hairs/19/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/20/1.svg`, `${config.public.base}/assets/female/hairs/20/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/21/1.svg`, `${config.public.base}/assets/female/hairs/21/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/22/1.svg`, `${config.public.base}/assets/female/hairs/22/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/23/1.svg`, `${config.public.base}/assets/female/hairs/23/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/24/1.svg`, `${config.public.base}/assets/female/hairs/24/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/25/1.svg`, `${config.public.base}/assets/female/hairs/25/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/26/1.svg`, `${config.public.base}/assets/female/hairs/26/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/27/1.svg`, `${config.public.base}/assets/female/hairs/27/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/28/1.svg`, `${config.public.base}/assets/female/hairs/28/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/29/1.svg`, `${config.public.base}/assets/female/hairs/29/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/30/1.svg`, `${config.public.base}/assets/female/hairs/30/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/31/1.svg`, `${config.public.base}/assets/female/hairs/31/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/32/1.svg`, `${config.public.base}/assets/female/hairs/32/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/33/1.svg`, `${config.public.base}/assets/female/hairs/33/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/34/1.svg`, `${config.public.base}/assets/female/hairs/34/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/35/1.svg`, `${config.public.base}/assets/female/hairs/35/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/36/1.svg`, `${config.public.base}/assets/female/hairs/36/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/37/1.svg`, `${config.public.base}/assets/female/hairs/37/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/38/1.svg`, `${config.public.base}/assets/female/hairs/38/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/39/1.svg`, `${config.public.base}/assets/female/hairs/39/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/40/1.svg`, `${config.public.base}/assets/female/hairs/40/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/41/1.svg`, `${config.public.base}/assets/female/hairs/41/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/42/1.svg`, `${config.public.base}/assets/female/hairs/42/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/43/1.svg`, `${config.public.base}/assets/female/hairs/43/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/44/1.svg`, `${config.public.base}/assets/female/hairs/44/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/45/1.svg`, `${config.public.base}/assets/female/hairs/45/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/46/1.svg`, `${config.public.base}/assets/female/hairs/46/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/47/1.svg`, `${config.public.base}/assets/female/hairs/47/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/48/1.svg`, `${config.public.base}/assets/female/hairs/48/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/49/1.svg`, `${config.public.base}/assets/female/hairs/49/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/50/1.svg`, `${config.public.base}/assets/female/hairs/50/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/51/1.svg`, `${config.public.base}/assets/female/hairs/51/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/52/1.svg`, `${config.public.base}/assets/female/hairs/52/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/53/1.svg`, `${config.public.base}/assets/female/hairs/53/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/54/1.svg`, `${config.public.base}/assets/female/hairs/54/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/55/1.svg`, `${config.public.base}/assets/female/hairs/55/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/56/1.svg`, `${config.public.base}/assets/female/hairs/56/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/57/1.svg`, `${config.public.base}/assets/female/hairs/57/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/58/1.svg`, `${config.public.base}/assets/female/hairs/58/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/59/1.svg`, `${config.public.base}/assets/female/hairs/59/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/60/1.svg`, `${config.public.base}/assets/female/hairs/60/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/61/1.svg`, `${config.public.base}/assets/female/hairs/61/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/62/1.svg`, `${config.public.base}/assets/female/hairs/62/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/63/1.svg`, `${config.public.base}/assets/female/hairs/63/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/64/1.svg`, `${config.public.base}/assets/female/hairs/64/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/65/1.svg`, `${config.public.base}/assets/female/hairs/65/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/66/1.svg`, `${config.public.base}/assets/female/hairs/66/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/67/1.svg`, `${config.public.base}/assets/female/hairs/67/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/68/1.svg`, `${config.public.base}/assets/female/hairs/68/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/69/1.svg`, `${config.public.base}/assets/female/hairs/69/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/70/1.svg`, `${config.public.base}/assets/female/hairs/70/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/71/1.svg`, `${config.public.base}/assets/female/hairs/71/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/72/1.svg`, `${config.public.base}/assets/female/hairs/72/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/73/1.svg`, `${config.public.base}/assets/female/hairs/73/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/74/1.svg`, `${config.public.base}/assets/female/hairs/74/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/75/1.svg`, `${config.public.base}/assets/female/hairs/75/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/76/1.svg`, `${config.public.base}/assets/female/hairs/76/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/77/1.svg`, `${config.public.base}/assets/female/hairs/77/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/78/1.svg`, `${config.public.base}/assets/female/hairs/78/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/79/1.svg`, `${config.public.base}/assets/female/hairs/79/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/80/1.svg`, `${config.public.base}/assets/female/hairs/80/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/81/1.svg`, `${config.public.base}/assets/female/hairs/81/2.svg`] },
-        { multi: true, src: [`${config.public.base}/assets/female/hairs/82/1.svg`, `${config.public.base}/assets/female/hairs/82/2.svg`] },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/1/1.svg`,
+            `${config.public.base}/assets/female/hairs/1/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/2/1.svg`,
+            `${config.public.base}/assets/female/hairs/2/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/3/1.svg`,
+            `${config.public.base}/assets/female/hairs/3/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/4/1.svg`,
+            `${config.public.base}/assets/female/hairs/4/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/5/1.svg`,
+            `${config.public.base}/assets/female/hairs/5/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/6/1.svg`,
+            `${config.public.base}/assets/female/hairs/6/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/7/1.svg`,
+            `${config.public.base}/assets/female/hairs/7/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/8/1.svg`,
+            `${config.public.base}/assets/female/hairs/8/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/9/1.svg`,
+            `${config.public.base}/assets/female/hairs/9/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/10/1.svg`,
+            `${config.public.base}/assets/female/hairs/10/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/11/1.svg`,
+            `${config.public.base}/assets/female/hairs/11/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/12/1.svg`,
+            `${config.public.base}/assets/female/hairs/12/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/13/1.svg`,
+            `${config.public.base}/assets/female/hairs/13/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/14/1.svg`,
+            `${config.public.base}/assets/female/hairs/14/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/15/1.svg`,
+            `${config.public.base}/assets/female/hairs/15/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/16/1.svg`,
+            `${config.public.base}/assets/female/hairs/16/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/17/1.svg`,
+            `${config.public.base}/assets/female/hairs/17/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/18/1.svg`,
+            `${config.public.base}/assets/female/hairs/18/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/19/1.svg`,
+            `${config.public.base}/assets/female/hairs/19/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/20/1.svg`,
+            `${config.public.base}/assets/female/hairs/20/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/21/1.svg`,
+            `${config.public.base}/assets/female/hairs/21/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/22/1.svg`,
+            `${config.public.base}/assets/female/hairs/22/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/23/1.svg`,
+            `${config.public.base}/assets/female/hairs/23/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/24/1.svg`,
+            `${config.public.base}/assets/female/hairs/24/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/25/1.svg`,
+            `${config.public.base}/assets/female/hairs/25/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/26/1.svg`,
+            `${config.public.base}/assets/female/hairs/26/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/27/1.svg`,
+            `${config.public.base}/assets/female/hairs/27/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/28/1.svg`,
+            `${config.public.base}/assets/female/hairs/28/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/29/1.svg`,
+            `${config.public.base}/assets/female/hairs/29/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/30/1.svg`,
+            `${config.public.base}/assets/female/hairs/30/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/31/1.svg`,
+            `${config.public.base}/assets/female/hairs/31/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/32/1.svg`,
+            `${config.public.base}/assets/female/hairs/32/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/33/1.svg`,
+            `${config.public.base}/assets/female/hairs/33/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/34/1.svg`,
+            `${config.public.base}/assets/female/hairs/34/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/35/1.svg`,
+            `${config.public.base}/assets/female/hairs/35/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/36/1.svg`,
+            `${config.public.base}/assets/female/hairs/36/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/37/1.svg`,
+            `${config.public.base}/assets/female/hairs/37/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/38/1.svg`,
+            `${config.public.base}/assets/female/hairs/38/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/39/1.svg`,
+            `${config.public.base}/assets/female/hairs/39/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/40/1.svg`,
+            `${config.public.base}/assets/female/hairs/40/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/41/1.svg`,
+            `${config.public.base}/assets/female/hairs/41/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/42/1.svg`,
+            `${config.public.base}/assets/female/hairs/42/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/43/1.svg`,
+            `${config.public.base}/assets/female/hairs/43/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/44/1.svg`,
+            `${config.public.base}/assets/female/hairs/44/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/45/1.svg`,
+            `${config.public.base}/assets/female/hairs/45/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/46/1.svg`,
+            `${config.public.base}/assets/female/hairs/46/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/47/1.svg`,
+            `${config.public.base}/assets/female/hairs/47/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/48/1.svg`,
+            `${config.public.base}/assets/female/hairs/48/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/49/1.svg`,
+            `${config.public.base}/assets/female/hairs/49/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/50/1.svg`,
+            `${config.public.base}/assets/female/hairs/50/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/51/1.svg`,
+            `${config.public.base}/assets/female/hairs/51/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/52/1.svg`,
+            `${config.public.base}/assets/female/hairs/52/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/53/1.svg`,
+            `${config.public.base}/assets/female/hairs/53/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/54/1.svg`,
+            `${config.public.base}/assets/female/hairs/54/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/55/1.svg`,
+            `${config.public.base}/assets/female/hairs/55/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/56/1.svg`,
+            `${config.public.base}/assets/female/hairs/56/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/57/1.svg`,
+            `${config.public.base}/assets/female/hairs/57/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/58/1.svg`,
+            `${config.public.base}/assets/female/hairs/58/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/59/1.svg`,
+            `${config.public.base}/assets/female/hairs/59/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/60/1.svg`,
+            `${config.public.base}/assets/female/hairs/60/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/61/1.svg`,
+            `${config.public.base}/assets/female/hairs/61/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/62/1.svg`,
+            `${config.public.base}/assets/female/hairs/62/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/63/1.svg`,
+            `${config.public.base}/assets/female/hairs/63/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/64/1.svg`,
+            `${config.public.base}/assets/female/hairs/64/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/65/1.svg`,
+            `${config.public.base}/assets/female/hairs/65/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/66/1.svg`,
+            `${config.public.base}/assets/female/hairs/66/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/67/1.svg`,
+            `${config.public.base}/assets/female/hairs/67/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/68/1.svg`,
+            `${config.public.base}/assets/female/hairs/68/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/69/1.svg`,
+            `${config.public.base}/assets/female/hairs/69/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/70/1.svg`,
+            `${config.public.base}/assets/female/hairs/70/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/71/1.svg`,
+            `${config.public.base}/assets/female/hairs/71/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/72/1.svg`,
+            `${config.public.base}/assets/female/hairs/72/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/73/1.svg`,
+            `${config.public.base}/assets/female/hairs/73/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/74/1.svg`,
+            `${config.public.base}/assets/female/hairs/74/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/75/1.svg`,
+            `${config.public.base}/assets/female/hairs/75/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/76/1.svg`,
+            `${config.public.base}/assets/female/hairs/76/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/77/1.svg`,
+            `${config.public.base}/assets/female/hairs/77/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/78/1.svg`,
+            `${config.public.base}/assets/female/hairs/78/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/79/1.svg`,
+            `${config.public.base}/assets/female/hairs/79/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/80/1.svg`,
+            `${config.public.base}/assets/female/hairs/80/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/81/1.svg`,
+            `${config.public.base}/assets/female/hairs/81/2.svg`,
+          ],
+        },
+        {
+          multi: true,
+          src: [
+            `${config.public.base}/assets/female/hairs/82/1.svg`,
+            `${config.public.base}/assets/female/hairs/82/2.svg`,
+          ],
+        },
         { src: `${config.public.base}/assets/female/hairs/83.svg` },
         { src: `${config.public.base}/assets/female/hairs/84.svg` },
         { src: `${config.public.base}/assets/female/hairs/85.svg` },
@@ -437,36 +1005,36 @@ export default function () {
         { src: `${config.public.base}/assets/female/clothes/14.svg` },
         { src: `${config.public.base}/assets/female/clothes/15.svg` },
         { src: `${config.public.base}/assets/female/clothes/16.svg` },
-        { src: `${config.public.base}/assets/female/clothes/17.svg` },
-        { src: `${config.public.base}/assets/female/clothes/18.svg` },
-        { src: `${config.public.base}/assets/female/clothes/19.svg` },
-        { src: `${config.public.base}/assets/female/clothes/20.svg` },
-        { src: `${config.public.base}/assets/female/clothes/21.svg` },
-        { src: `${config.public.base}/assets/female/clothes/22.svg` },
-        { src: `${config.public.base}/assets/female/clothes/23.svg` },
-        { src: `${config.public.base}/assets/female/clothes/24.svg` },
-        { src: `${config.public.base}/assets/female/clothes/25.svg` },
-        { src: `${config.public.base}/assets/female/clothes/26.svg` },
-        { src: `${config.public.base}/assets/female/clothes/27.svg` },
-        { src: `${config.public.base}/assets/female/clothes/28.svg` },
-        { src: `${config.public.base}/assets/female/clothes/29.svg` },
-        { src: `${config.public.base}/assets/female/clothes/30.svg` },
-        { src: `${config.public.base}/assets/female/clothes/31.svg` },
-        { src: `${config.public.base}/assets/female/clothes/32.svg` },
-        { src: `${config.public.base}/assets/female/clothes/33.svg` },
-        { src: `${config.public.base}/assets/female/clothes/34.svg` },
-        { src: `${config.public.base}/assets/female/clothes/35.svg` },
-        { src: `${config.public.base}/assets/female/clothes/36.svg` },
-        { src: `${config.public.base}/assets/female/clothes/37.svg` },
-        { src: `${config.public.base}/assets/female/clothes/38.svg` },
-        { src: `${config.public.base}/assets/female/clothes/39.svg` },
-        { src: `${config.public.base}/assets/female/clothes/40.svg` },
-        { src: `${config.public.base}/assets/female/clothes/41.svg` },
-        { src: `${config.public.base}/assets/female/clothes/42.svg` },
-        { src: `${config.public.base}/assets/female/clothes/43.svg` },
-        { src: `${config.public.base}/assets/female/clothes/44.svg` },
-        { src: `${config.public.base}/assets/female/clothes/45.svg` },
-        { src: `${config.public.base}/assets/female/clothes/46.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/17.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/18.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/19.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/20.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/21.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/22.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/23.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/24.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/25.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/26.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/27.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/28.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/29.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/30.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/31.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/32.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/33.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/34.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/35.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/36.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/37.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/38.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/39.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/40.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/41.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/42.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/43.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/44.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/45.svg` },
+        // { src: `${config.public.base}/assets/female/clothes/46.svg` },
       ],
       accessories: [
         { src: `${config.public.base}/assets/female/accessories/1.svg` },
@@ -477,6 +1045,10 @@ export default function () {
         { src: `${config.public.base}/assets/female/accessories/6.svg` },
         { src: `${config.public.base}/assets/female/accessories/7.svg` },
         { src: `${config.public.base}/assets/female/accessories/8.svg` },
+        { src: `${config.public.base}/assets/female/accessories/9.svg` },
+        { src: `${config.public.base}/assets/female/accessories/10.svg` },
+        { src: `${config.public.base}/assets/female/accessories/11.svg` },
+        { src: `${config.public.base}/assets/female/accessories/12.svg` },
       ],
       mouths: [
         { src: `${config.public.base}/assets/female/mouths/1.svg` },
@@ -489,7 +1061,7 @@ export default function () {
         { src: `${config.public.base}/assets/female/mouths/8.svg` },
         { src: `${config.public.base}/assets/female/mouths/9.svg` },
         { src: `${config.public.base}/assets/female/mouths/10.svg` },
-      ]
+      ],
     },
     backgrounds: [
       { src: `${config.public.base}/assets/backgrounds/1.png` },
@@ -512,12 +1084,8 @@ export default function () {
       { src: `${config.public.base}/assets/backgrounds/18.png` },
       { src: `${config.public.base}/assets/backgrounds/19.png` },
       { src: `${config.public.base}/assets/backgrounds/20.png` },
-      { src: `${config.public.base}/assets/backgrounds/21.png` },
-      { src: `${config.public.base}/assets/backgrounds/22.png` },
-      { src: `${config.public.base}/assets/backgrounds/23.png` },
-      { src: `${config.public.base}/assets/backgrounds/24.png` },
-    ]
-  }))
+    ],
+  }));
 
-  return { viewMode, loaded, assets }
+  return { viewMode, loaded, assets };
 }

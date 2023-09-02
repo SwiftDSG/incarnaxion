@@ -151,26 +151,15 @@
       </div>
       <div class="rd-panel-body">
         <div
-          v-if="panelOption.identifier === 'accessories'"
-          class="rd-panel-content"
-          :class="
-            selection[panelOption.identifier] === 0
-              ? 'rd-panel-content-active'
-              : ''
-          "
-          @click="changeAsset"
-          data-index="0"
-        >
-          <div class="rd-panel-content-icon-container">
-            <rd-svg class="rd-panel-content-icon" name="close" />
-          </div>
-        </div>
-        <div
           v-for="(option, i) in panelOption.option"
           :key="i"
           class="rd-panel-content"
           :class="
-            i === selection[panelOption.identifier] - 1
+            (
+              panelOption.identifier !== 'accessories'
+                ? i === selection[panelOption.identifier] - 1
+                : selection[panelOption.identifier].includes(i + 1)
+            )
               ? 'rd-panel-content-active'
               : ''
           "
@@ -209,30 +198,15 @@
         </div>
         <div class="rd-panel-body">
           <div
-            v-if="panelOption.identifier === 'accessories'"
-            class="rd-panel-content"
-            :class="
-              selection[panelOption.identifier] === 0
-                ? 'rd-panel-content-active'
-                : ''
-            "
-            @click="changeAsset"
-            data-index="0"
-          >
-            <div class="rd-panel-content-icon-container">
-              <rd-svg
-                class="rd-panel-content-icon"
-                name="close"
-                color="secondary"
-              />
-            </div>
-          </div>
-          <div
             v-for="(option, i) in panelOption.option"
             :key="i"
             class="rd-panel-content"
             :class="
-              i === selection[panelOption.identifier] - 1
+              (
+                panelOption.identifier !== 'accessories'
+                  ? i === selection[panelOption.identifier] - 1
+                  : selection[panelOption.identifier].includes(i + 1)
+              )
                 ? 'rd-panel-content-active'
                 : ''
             "
@@ -460,7 +434,7 @@
     eyes: number;
     eyebrows: number;
     clothes: number;
-    accessories: number;
+    accessories: number[];
     mouths: number;
   }
 
@@ -537,7 +511,7 @@
     eyes: 1,
     eyebrows: 1,
     clothes: 1,
-    accessories: 0,
+    accessories: [],
     mouths: 1,
   });
 
@@ -799,7 +773,18 @@
   function changeAsset(e: MouseEvent): void {
     if (e.target instanceof HTMLElement) {
       const index: number = parseInt(e.target.dataset.index);
-      selection.value[panelOption.value.identifier] = index;
+      if (panelOption.value.identifier === "accessories") {
+        const pos =
+          selection.value[panelOption.value.identifier].indexOf(index);
+        if (pos > -1) {
+          selection.value[panelOption.value.identifier].splice(pos, 1);
+        } else {
+          selection.value[panelOption.value.identifier].push(index);
+        }
+        console.log(selection.value);
+      } else {
+        selection.value[panelOption.value.identifier] = index;
+      }
     }
   }
 
@@ -939,16 +924,16 @@
       1500,
       1500
     );
-    if (selection.value.accessories) {
-      canvasCtx.value.drawImage(
-        assets.value[selection.value.gender].accessories[
-          selection.value.accessories - 1
-        ].file,
-        0,
-        0,
-        1500,
-        1500
-      );
+    if (selection.value.accessories.length) {
+      for (const accessory of selection.value.accessories) {
+        canvasCtx.value.drawImage(
+          assets.value[selection.value.gender].accessories[accessory - 1].file,
+          0,
+          0,
+          1500,
+          1500
+        );
+      }
     }
     canvasCtx.value.closePath();
   }
@@ -1036,16 +1021,16 @@
       1500,
       1500
     );
-    if (selection.value.accessories) {
-      canvasCtx.drawImage(
-        assets.value[selection.value.gender].accessories[
-          selection.value.accessories - 1
-        ].file,
-        0,
-        0,
-        1500,
-        1500
-      );
+    if (selection.value.accessories.length) {
+      for (const accessory of selection.value.accessories) {
+        canvasCtx.drawImage(
+          assets.value[selection.value.gender].accessories[accessory - 1].file,
+          0,
+          0,
+          1500,
+          1500
+        );
+      }
     }
 
     const imageOne: HTMLImageElement = new Image();

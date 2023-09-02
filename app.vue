@@ -70,7 +70,7 @@
 
 <style lang="scss">
   :root {
-    --primary-color: #864fef;
+    --primary-color: #ffda74;
     --secondary-color: #000;
     --error-color: #ff584c;
     --warning-color: #ffc904;
@@ -78,10 +78,10 @@
     --border-color: #ececec;
     --font-main-color: #fff;
     --font-secondary-color: #7f7f7f;
-    --background-depth-one-color: #050724;
-    --background-depth-two-color: #070b36;
-    --background-depth-three-color: #080c3d;
-    --border-color: #0b0675;
+    --background-depth-one-color: #15120a;
+    --background-depth-two-color: #211d10;
+    --background-depth-three-color: #3b3420;
+    --border-color: #332b14;
     --border: 1px solid var(--border-color);
     --box-shadow: 0 0.5rem 1rem rgba(33, 31, 90, 0.125);
   }

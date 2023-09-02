@@ -7,7 +7,7 @@ module.exports = {
       script: './.output/server/index.mjs',
       env: {
         "NUXT_APP_BASE_URL": "/incarnaxion",
-        "PORT": 3003
+        "PORT": 3002
       }
     }
   ]

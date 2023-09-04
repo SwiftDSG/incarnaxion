@@ -1033,36 +1033,6 @@
       }
     }
 
-    const imageOne: HTMLImageElement = new Image();
-    const imageTwo: HTMLImageElement = new Image();
-    const imageThree: HTMLImageElement = new Image();
-
-    imageOne.onload = () => {
-      canvasCtx.drawImage(imageOne, 50, 50, 100, 100);
-    };
-    imageTwo.onload = () => {
-      canvasCtx.drawImage(
-        imageTwo,
-        200,
-        50,
-        (imageTwo.width * 100) / imageTwo.height,
-        100
-      );
-    };
-    imageThree.onload = () => {
-      canvasCtx.drawImage(
-        imageThree,
-        1450 - (imageThree.width * 100) / imageThree.height,
-        50,
-        (imageThree.width * 100) / imageThree.height,
-        100
-      );
-    };
-
-    imageOne.src = "uc_logo.webp";
-    imageTwo.src = "vcd_logo.webp";
-    imageThree.src = "artxplosion_logo.png";
-
     canvasCtx.closePath();
   }
 

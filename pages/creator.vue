@@ -87,7 +87,7 @@
       />
     </div>
     <div class="rd-export-button-container">
-      <button class="rd-export-button rd-button-text" @click="exportOpen">
+      <button class="rd-export-button rd-button-text" @click="download">
         EXPORT
       </button>
     </div>
@@ -327,24 +327,6 @@
           ></div>
         </div>
       </div>
-      <div
-        class="rd-question-container"
-        :class="questionIndex === 2 ? 'rd-question-container-active' : ''"
-        data-index="2"
-      >
-        <span class="rd-question rd-headline-4"
-          >Lastly, what is your name?</span
-        >
-        <div class="rd-question-answers">
-          <input
-            type="text"
-            class="rd-question-answer rd-headline-4"
-            @input="updateName"
-            ref="rdQuestionAnswerInput"
-          />
-          <div class="rd-question-answer-shadow"></div>
-        </div>
-      </div>
       <button
         class="rd-question-button rd-question-button-prev"
         style="opacity: 0; transform: scale(0.875)"
@@ -352,7 +334,11 @@
         @click="prevQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg name="arrow-left" class="rd-question-button-icon" />
+          <rd-svg
+            name="arrow-left"
+            color="secondary"
+            class="rd-question-button-icon"
+          />
         </div>
       </button>
       <button
@@ -368,46 +354,12 @@
         @click="nextQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg name="arrow-right" class="rd-question-button-icon" />
+          <rd-svg
+            name="arrow-right"
+            color="secondary"
+            class="rd-question-button-icon"
+          />
         </div>
-      </button>
-    </div>
-    <div
-      class="rd-export-container"
-      ref="rdExportContainer"
-      :class="exportOpened ? 'rd-export-container-active' : ''"
-    >
-      <rd-input-button-small
-        class="rd-export-close-button"
-        icon="close"
-        @clicked="exportOpened = false"
-      />
-      <span class="rd-export-title rd-headline-4">Share your avatar!</span>
-      <div class="rd-export-image-container">
-        <canvas
-          class="rd-export-canvas"
-          width="1500"
-          height="1500"
-          ref="rdExportCanvas"
-        ></canvas>
-      </div>
-      <div class="rd-export-caption-container">
-        <p class="rd-export-caption rd-body-text" ref="rdExportCaption">
-          {{
-            `Hi, ${name} here! Imbued with all the cosmic powers that burst from ‘the big bang phenomenon,’ I finally find my IncarnaXion, and now I’m ready to BLAST OFF to ArtXplosion!!!`
-          }}
-          <br />
-          <br />
-          Let’s take a journey together into this creative galaxy! Visit
-          @vcd.outliningdesign to incarnate yourself and get ready to BLAST
-          OFF!!
-          <br />
-          <br />
-          #ArtXplosion #VCDears #OutliningDesign2023 #IncarnaXion
-        </p>
-      </div>
-      <button @click="download" class="rd-export-button rd-button-text">
-        DOWNLOAD & COPY
       </button>
     </div>
     <div v-if="loading" class="rd-loading-container" ref="rdLoadingContainer">
@@ -808,7 +760,7 @@
   function nextQuestionIndex(): void {
     const temp: number = questionIndex.value;
     questionIndex.value = -1;
-    if (temp < 2) {
+    if (temp < 1) {
       animate.questionExit(rdQuestionContainer.value, temp, false, () => {
         animate.questionInit(rdQuestionContainer.value, temp + 1, false, () => {
           questionIndex.value = temp + 1;
@@ -818,7 +770,7 @@
         });
       });
     } else {
-      animate.questionExit(rdQuestionContainer.value, 2, true, () => {
+      animate.questionExit(rdQuestionContainer.value, 1, true, () => {
         loading.value = true;
 
         assetsCount.value =
@@ -838,13 +790,6 @@
         }, 100);
       });
     }
-  }
-
-  function exportOpen(): void {
-    drawExport();
-    setTimeout(() => {
-      exportOpened.value = true;
-    }, 250);
   }
 
   function draw(): void {
@@ -937,121 +882,9 @@
     }
     canvasCtx.value.closePath();
   }
-  function drawExport(): void {
-    const canvasCtx = rdExportCanvas.value.getContext("2d");
-    canvasCtx.globalAlpha = 1;
-    canvasCtx.fillStyle = "#000";
-    canvasCtx.strokeStyle = "#000";
-    canvasCtx.lineWidth = 0;
-    canvasCtx.setLineDash([0, 0]);
-    canvasCtx.save();
-    canvasCtx.beginPath();
-    canvasCtx.drawImage(
-      assets.value.backgrounds[selection.value.backgrounds - 1].file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    if (
-      Array.isArray(
-        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
-          .file
-      )
-    )
-      canvasCtx.drawImage(
-        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
-          .file[0],
-        0,
-        0,
-        1500,
-        1500
-      );
-    canvasCtx.drawImage(
-      assets.value[selection.value.gender].bodies[selection.value.bodies - 1]
-        .file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    canvasCtx.drawImage(
-      assets.value[selection.value.gender].clothes[selection.value.clothes - 1]
-        .file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    canvasCtx.drawImage(
-      assets.value[selection.value.gender].eyes[selection.value.eyes - 1].file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    canvasCtx.drawImage(
-      assets.value[selection.value.gender].mouths[selection.value.mouths - 1]
-        .file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    canvasCtx.drawImage(
-      assets.value[selection.value.gender].eyebrows[
-        selection.value.eyebrows - 1
-      ].file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    canvasCtx.drawImage(
-      Array.isArray(
-        assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
-          .file
-      )
-        ? assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
-            .file[1]
-        : assets.value[selection.value.gender].hairs[selection.value.hairs - 1]
-            .file,
-      0,
-      0,
-      1500,
-      1500
-    );
-    if (selection.value.accessories.length) {
-      for (const accessory of selection.value.accessories) {
-        canvasCtx.drawImage(
-          assets.value[selection.value.gender].accessories[accessory - 1].file,
-          0,
-          0,
-          1500,
-          1500
-        );
-      }
-    }
-
-    canvasCtx.closePath();
-  }
-
-  function updateName(e: InputEvent): void {
-    if (e.target instanceof HTMLInputElement) {
-      const value: string = e.target.value;
-      name.value = value;
-    }
-  }
 
   function download(): void {
-    const rdTextarea: HTMLTextAreaElement = document.createElement("textarea");
-    rdTextarea.innerHTML = `Hi, ${name.value} here! Imbued with all the cosmic powers that burst from ‘the big bang phenomenon,’ I finally find my IncarnaXion, and now I’m ready to BLAST OFF to ArtXplosion!!!\r\n\r\nLet’s take a journey together into this creative galaxy! Visit @vcd.outliningdesign to incarnate yourself and get ready to BLAST OFF!!\r\n\r\n#ArtXplosion #VCDears #OutliningDesign2023 #IncarnaXion`;
-    rdTextarea.select();
-    rdTextarea.setSelectionRange(0, 999999);
-    navigator.clipboard.writeText(rdTextarea.value);
-    rdTextarea.remove();
-
-    let base64: string = rdExportCanvas.value.toDataURL("image/png");
+    let base64: string = rdCanvas.value.toDataURL("image/png");
     base64 = base64.replace(
       /^data:image\/[^;]*/,
       "data:application/octet-stream"
@@ -1072,7 +905,7 @@
     setTimeout(() => {
       setAlert({
         type: "success",
-        title: "Download & Copy Success",
+        title: "Download Success",
         message: "Go on and spread the message!",
       });
     }, 500);
@@ -1639,7 +1472,7 @@
               loading.value = false;
               setAlert({
                 type: "warning",
-                title: "Begin Incarnaxion!",
+                title: "Begin Incarnation!",
                 message: "Click on the avatar to begin editing",
               });
             });
@@ -1675,6 +1508,7 @@
     width: 100vw;
     height: 100vh;
     height: calc(var(--vh) * 100);
+    background: var(--background-depth-one-color);
     display: flex;
     .rd-header {
       z-index: 2;
@@ -1839,7 +1673,7 @@
         padding: 0 0.75rem;
         border-radius: 0.5rem;
         background: var(--primary-color);
-        color: #fff;
+        color: #000;
         border: none;
         display: flex;
         justify-content: center;
@@ -1896,7 +1730,7 @@
         border-radius: 1rem;
         padding: 1rem;
         box-sizing: border-box;
-        background: #fff;
+        background: var(--background-depth-two-color);
         box-shadow: var(--box-shadow);
         opacity: 0;
         transform-origin: top left;
@@ -1919,7 +1753,8 @@
           justify-content: space-between;
           align-items: center;
           span.rd-panel-title {
-            color: #000;
+            color: var(--font-main-color);
+            text-transform: capitalize;
           }
           &::after {
             content: "";
@@ -2218,117 +2053,6 @@
           filter: grayscale(0);
           opacity: 1;
         }
-      }
-    }
-    .rd-export-container {
-      z-index: 3;
-      pointer-events: none;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: var(--background-depth-one-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: 0.5s opacity;
-      .rd-export-close-button {
-        position: absolute;
-        top: 2rem;
-        left: 2rem;
-      }
-      span.rd-export-title {
-        position: relative;
-        color: #fff;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-        // transform: translateY(-100%);
-        // opacity: 0;
-      }
-      .rd-export-image-container {
-        position: relative;
-        width: 20vw;
-        height: 20vw;
-        border-radius: 1rem;
-        margin-bottom: 1rem;
-        background: var(--background-depth-two-color);
-        display: flex;
-        overflow: hidden;
-        canvas.rd-export-canvas {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .rd-export-caption-container {
-        position: relative;
-        width: 20vw;
-        padding: 1rem;
-        border-radius: 1rem;
-        border: 0.25rem solid var(--background-depth-three-color);
-        box-sizing: border-box;
-        display: flex;
-        p.rd-export-caption {
-          position: relative;
-          color: #fff;
-          line-height: 1.5;
-        }
-      }
-      button.rd-export-button {
-        cursor: pointer;
-        position: relative;
-        width: 20vw;
-        height: 2rem;
-        padding: 0 0.75rem;
-        margin-top: 2rem;
-        border-radius: 0.5rem;
-        background: var(--primary-color);
-        color: #fff;
-        border: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: 0.5s scale, 0.25s filter, 0.25s opacity;
-        &:active {
-          scale: 0.875 !important;
-          transition: 0.25s scale;
-          &::after {
-            opacity: 0.25;
-            transition: 0.25s opacity;
-          }
-        }
-        &:hover {
-          &::before {
-            opacity: 1;
-          }
-        }
-        &::after {
-          content: "";
-          position: absolute;
-          pointer-events: none;
-          width: 100%;
-          height: 100%;
-          border-radius: 0.5rem;
-          background: #000;
-          opacity: 0;
-          transition: 0.5s opacity;
-        }
-        &::before {
-          content: "";
-          pointer-events: none;
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          box-shadow: 0 0 2rem var(--primary-color);
-          border-radius: 0.5rem;
-          opacity: 0;
-          transition: 0.25s opacity;
-        }
-      }
-      &.rd-export-container-active {
-        pointer-events: all;
-        opacity: 1;
       }
     }
     .rd-loading-container {

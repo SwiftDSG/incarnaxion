@@ -70,14 +70,14 @@
 
 <style lang="scss">
   :root {
-    --primary-color: #ffda74;
+    --primary-color: #ccae70;
     --secondary-color: #000;
     --error-color: #ff584c;
     --warning-color: #ffc904;
     --success-color: #6bc785;
     --border-color: #ececec;
-    --font-main-color: #fff;
-    --font-secondary-color: #7f7f7f;
+    --font-main-color: #fffbef;
+    --font-secondary-color: #15120a;
     --background-depth-one-color: #15120a;
     --background-depth-two-color: #211d10;
     --background-depth-three-color: #3b3420;

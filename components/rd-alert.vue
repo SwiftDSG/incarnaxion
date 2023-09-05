@@ -7,7 +7,7 @@
       class="rd-alert"
     >
       <div class="rd-alert-icon-container">
-        <rd-svg :name="alert.type" color="secondary" />
+        <rd-svg :name="alert.type" />
       </div>
       <div class="rd-alert-details">
         <span class="rd-alert-title rd-headline-5">
@@ -185,7 +185,6 @@
         position: relative;
         width: calc(100% - 2rem);
         height: 100%;
-        color: #fff;
         padding-left: 0.5rem;
         box-sizing: border-box;
         display: flex;
@@ -196,7 +195,7 @@
           position: relative;
           line-height: 1;
           color: inherit;
-          color: #000;
+          color: var(--font-main-color);
         }
         span.rd-alert-title {
           margin-bottom: 0.25rem;

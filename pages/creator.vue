@@ -334,11 +334,7 @@
         @click="prevQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg
-            name="arrow-left"
-            color="secondary"
-            class="rd-question-button-icon"
-          />
+          <rd-svg name="arrow-left" class="rd-question-button-icon" />
         </div>
       </button>
       <button
@@ -354,11 +350,7 @@
         @click="nextQuestionIndex"
       >
         <div class="rd-question-button-icon-container">
-          <rd-svg
-            name="arrow-right"
-            color="secondary"
-            class="rd-question-button-icon"
-          />
+          <rd-svg name="arrow-right" class="rd-question-button-icon" />
         </div>
       </button>
     </div>
@@ -1673,7 +1665,7 @@
         padding: 0 0.75rem;
         border-radius: 0.5rem;
         background: var(--primary-color);
-        color: #000;
+        color: var(--font-main-color);
         border: none;
         display: flex;
         justify-content: center;

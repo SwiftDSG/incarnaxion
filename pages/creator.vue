@@ -2,7 +2,7 @@
   <div class="rd-container">
     <header class="rd-header">
       <div class="rd-logo-container" @click="goHome">
-        <img src="/incarnation_logo.webp" class="rd-logo" />
+        <img src="/logo.webp" class="rd-logo" />
       </div>
     </header>
     <div v-if="loaded" ref="rdContainer" class="rd-canvas-container">
@@ -1506,7 +1506,7 @@
       z-index: 2;
       position: absolute;
       width: 100%;
-      height: 5rem;
+      height: 3rem;
       padding: 2rem 2rem 0 2rem;
       box-sizing: border-box;
       display: flex;
@@ -1517,6 +1517,11 @@
         position: relative;
         height: 100%;
         display: flex;
+        img.rd-logo {
+          position: relative;
+          height: 100%;
+          object-fit: contain;
+        }
         * {
           pointer-events: none;
         }

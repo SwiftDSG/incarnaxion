@@ -10,10 +10,10 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "id",
       },
-      title: "IncarnaXion: ArtXplosion Avatar Make",
+      title: "VICOLIO: Custom Avatar Maker",
       meta: [
         { charset: "utf-8" },
-        { name: "keywords", content: "IncarnaXion: ArtXplosion Avatar Make" },
+        { name: "keywords", content: "VICOLIO: Custom Avatar Maker" },
         {
           name: "viewport",
           content:
